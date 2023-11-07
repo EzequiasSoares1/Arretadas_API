@@ -1,0 +1,114 @@
+{
+    "/alert": {
+        "post": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Alerts"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "id": "61a81b6db632390018cd9c77",
+                                "latitude": "-15.612396444791289",
+                                "longitude": "-56.09546959514409",
+                                "date": "2021-10-26",
+                                "hour": "11:00"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "400": {
+                    "description": "Atributos inválidos"
+                },
+                "500": {
+                    "description": "Falha ao criar alert - Dados inválidos"
+                },
+                "201": {
+                    "description": "Alert criado com sucesso"
+                }
+            }
+        },
+        "get": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Alerts"
+            ],
+            "parameters": [
+                {
+                    "in": "query",
+                    "name": "init",
+                    "type": "Date",
+                    "description": "Data inicio para buscar alerts em um intervalo de tempo (ano - mês - dia)",
+                    "required": true
+                },
+                {
+                    "in": "query",
+                    "name": "final",
+                    "type": "Date",
+                    "description": "Data final para buscar alerts em um intervalo de tempo (ano - mês - dia)",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Informe uma data de inicio e uma data de fim"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "delete": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Alerts"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "id": "61a81b6db632390018cd9c77"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Você precisa ser ADM para realizar essa operação"
+                },
+                "401":{
+                    "description":"Você precisa de um token de ADM para fazer essa operação"
+                },
+                "200": {
+                    "description": "Alert removido com sucesso!"
+                }
+            }
+        }
+    }
+}

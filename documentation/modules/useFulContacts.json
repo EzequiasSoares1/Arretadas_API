@@ -1,0 +1,188 @@
+{
+    "/usefulcontacts":{
+        "get": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Use Full Contacts"
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "post":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            
+            "tags": [
+                "Use Full Contacts"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "name":"Fulano",
+                                "number":"83999999999"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao consultar contatos"
+                },
+                "400":{
+                    "description": "Dados faltando ou dados incorretos"
+                },
+                "201": {
+                    "description": "Criado com sucesso"
+                }
+            }
+        },
+        "delete":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            
+            "tags": [
+                "Use Full Contacts"
+            ],
+            "parameters": [
+                {
+                    "in": "query",
+                    "name": "id",
+                    "type": "String",
+                    "description": "Id do contado cadastrado",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "500": {
+                    "description": "Precisa de um token para autenticação (Token de ADM)"
+                },
+                "200": {
+                    "description": "OK"
+                }
+            }
+        }
+    },
+    "/usefulcontacts/{name}":{
+        "get": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Use Full Contacts"
+            ], 
+            "parameters":[
+                {
+                    "name":"name",
+                    "in":"path",
+                    "description":"Nome do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/usefulcontacts/{id}":{
+        "put":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Use Full Contacts"
+            ], 
+            "parameters":[
+                {
+                    "name":"id",
+                    "in":"path",
+                    "description":"Id do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "name":"Fulano",
+                                "number":"83999999999"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Precisa de um token para autenticação (Token de ADM)"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/usefulcontacts/id/{id}":{
+        "get":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Use Full Contacts"
+            ],
+            "parameters":[
+                {
+                    "name":"id",
+                    "in":"path",
+                    "description":"Id do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "responses": {
+                "500": {
+                    "description": "Precisa de um token para autenticação (Token de ADM)"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    }
+}

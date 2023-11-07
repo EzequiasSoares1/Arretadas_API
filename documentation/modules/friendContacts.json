@@ -1,0 +1,235 @@
+{
+    "/friendcontact":{
+        "get": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Friend Contacts"
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "post":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            
+            "tags": [
+                "Friend Contacts"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "id":"61a81b6db632390018cd9c77",
+                                "name":"Fulano",
+                                "number":"83999999999"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos"
+                },
+                "400":{
+                    "description": "Dados faltando ou dados incorretos"
+                },
+                "201": {
+                    "description": "Criado com sucesso"
+                }
+            }
+        }
+    },
+    "/friendcontact/{name}":{
+        "get":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Friend Contacts"
+            ],
+            "parameters":[
+                {
+                    "name":"name",
+                    "in":"path",
+                    "description":"Nome do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/friendcontact/id/{id}":{
+        "get":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Friend Contacts"
+            ],
+            "parameters":[
+                {
+                    "name":"id",
+                    "in":"path",
+                    "description":"Id do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos - Id incorreto"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "delete":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Friend Contacts"
+            ],
+            "parameters":[
+                {
+                    "name":"id",
+                    "in":"path",
+                    "description":"Id do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos - Não encontrado"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/friendcontact/user/{id}":{
+        "get":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Friend Contacts"
+            ],
+            "parameters":[
+                {
+                    "name":"id",
+                    "in":"path",
+                    "description":"Id do user que cadastrou os contatos",
+                    "required":true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar contatos - Id incorreto"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/friendcontact/{id}":{
+        "put":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Friend Contacts"
+            ],
+            "parameters":[
+                {
+                    "name":"id",
+                    "in":"path",
+                    "description":"Id do contato cadastrado",
+                    "required":true
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "name":"Fulano",
+                                "number":"83999999999"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao fazer o update em um contato"
+                },
+                "400":{
+                    "description": "Dados incorretos ou faltando"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    }
+
+    
+}

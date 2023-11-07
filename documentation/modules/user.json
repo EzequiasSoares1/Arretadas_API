@@ -1,0 +1,337 @@
+{
+    "/user": {
+        "get": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "User"
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar users"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "post": {
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "nickname": "Exemplo",
+                                "password": "123456",
+                                "indexQuestion": 3,
+                                "answerQuestion": "resposta exemplo",
+                                "city": "Monteiro",
+                                "roles": "admin"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "400": {
+                    "description": "Dados inválidos"
+                },
+                "500": {
+                    "description": "Falha ao consultar users"
+                },
+                "201": {
+                    "description": "Criado"
+                }
+            }
+        },
+        "delete": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "id": "61cdf3577a06e469838cb37f"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Precisa de um token para autenticação (Token de ADM)"
+                },
+                "200": {
+                    "description": "Criado"
+                }
+            }
+        }
+    },
+    "/user/{name}": {
+        "get": {
+            "tags": [
+                "User"
+            ],
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "path",
+                    "description": "Nome do user cadastrado",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "400": {
+                    "description": "Não encontrado"
+                },
+                "500": {
+                    "description": "Falha ao consultar users"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/user/id/{id}": {
+        "get": {
+            "tags": [
+                "User"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id do user cadastrado",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao consultar users"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/user/update-password": {
+        "put": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "newPassword": "654321",
+                                "oldPassword": "123456",
+                                "nickname": "Victor Monteiro",
+                                "id": "61cf4cb80a8dad1a3a79d92e"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação ou senha inválida"
+                },
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/user/recover-password": {
+        "patch": {
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "newPassword": "654321",
+                                "id": "61cf4cb80a8dad1a3a79d92e"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "404": {
+                    "description": "Usuário não encontrado"
+                },
+                "400": {
+                    "description": "Responda as questões de segurança"
+                },
+                "200": {
+                    "description": "Senha alterada com sucesso"
+                }
+            }
+        }
+    },
+    "/user/recover-questions": {
+        "post": {
+            "tags": [
+                "User"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "nickname": "Victor Monteiro",
+                                "indexQuestion": 3,
+                                "answerQuestion": "rubens orley"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "404": {
+                    "description": "Usuário não encontrado"
+                },
+                "400": {
+                    "description": "Responda as questões de segurança"
+                },
+                "200": {
+                    "description": "Questões respondidas com sucesso"
+                }
+            }
+        }
+    },
+    "/user/{id}": {
+        "put": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "User"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id do user cadastrado",
+                    "required": true
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "nickname": "Victor Monteiro",
+                                "password": "654321",
+                                "protection_code": "586407"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "200": {
+                    "description": "Ok"
+                }
+            }
+        }
+    },
+    "/user/refresh-token": {
+        "post": {
+            "tags": [
+                "User"
+            ],
+            "parameters": [
+                {
+                    "name": "token",
+                    "in": "query",
+                    "description": "Token para verificação se está válido e caso necessário fazer o refresh",
+                    "required": true
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "nickname": "Victor Monteiro",
+                                "id": "61cf4cb80a8dad1a3a79d92e"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "400":{
+                    "description":"O token informado não pertence ao usuário ou é inválido"
+                },
+                "404":{
+                    "description":"Informe um id e um nickname válido"
+                },
+                "200": {
+                    "description": "Ok"
+                }
+            }
+        }
+    }
+}

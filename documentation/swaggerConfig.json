@@ -1,0 +1,20 @@
+{
+    "openapi":"3.0.0",
+    "info":{
+        "title": "Arretadas-API",
+        "description":"Documentação do back-end do arretadas.",
+        "version":"1.0.0"
+    },
+    "basePath":"/",
+    "components":{
+        "securitySchemes":{
+            "bearerAuth":{
+                "type":"http",
+                "scheme":"bearer",
+                "bearerFormat":"JWT"
+            }
+        }
+    },
+
+    "paths":{}
+}

@@ -1,0 +1,93 @@
+{
+    "/userAdm":{
+        "post":{
+            "tags": [
+                "User Adm"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "name": "Victor Monteiro ADM",
+                                "password": "123456",
+                                "city": "monteiro"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "400":{
+                    "description":"Dados inválidos"
+                },
+                "201":{
+                    "description":"Criado com sucesso"
+                }
+            }
+        }
+    },
+    "/userAdm/authenticate":{
+        "post":{
+            "tags": [
+                "User Adm"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "name": "Victor Monteiro ADM",
+                                "password": "123456"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "500": {
+                    "description": "Falha ao fazer o update"
+                },
+                "404":{
+                    "description":"Usuário ou senha inválidos"
+                },
+                "200":{
+                    "description":"Ok"
+                }
+            }
+        }
+        
+    },
+    "/userAdm/valid-token":{
+        "post":{
+            "tags": [
+                "User Adm"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "oldToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVmljdG9yIE1vbnRlaXJvIEFETSIsInBhc3N3b3JkIjoiMTIzNDU2IiwiaWF0IjoxNjQwOTgwMzg1LCJleHAiOjE2NDA5ODIxODV9.m4g4MpJNfjGphugEv2Zq7cFlxYLWu0x7KxmM_YeGQn8"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401":{
+                    "description":"Token Inválido"
+                },
+                "200":{
+                    "description":"ok"
+                }
+            }
+        }
+    }
+}

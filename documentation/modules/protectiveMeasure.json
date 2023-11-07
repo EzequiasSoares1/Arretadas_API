@@ -1,0 +1,38 @@
+{
+    "/protective-measure":{
+        "post":{
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            
+            "tags": [
+                "Protective Measure"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "code":"8l9n2d"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "302": {
+                    "description": "O código existe na base de dados"
+                },
+                "404": {
+                    "description": "O código não existe na base de dados"
+                },
+                "500":{
+                    "description": "Falha no servidor"
+                }
+            }
+        }
+    }
+}

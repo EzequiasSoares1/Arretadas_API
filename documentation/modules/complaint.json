@@ -1,0 +1,130 @@
+{
+    "/complaint": {
+        "post": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Complaint"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "latitude": "-8.901668243594916",
+                                "longitude": "-36.498653188567124",
+                                "date": "2021-10-26",
+                                "hour": "11:00",
+                                "type_complaint": [
+                                    "Física",
+                                    "Sexual"
+                                ],
+                                "id": "61a81b6db632390018cd9c77"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "400": {
+                    "description": "Precisa passar ao menos um tipo de denuncia"
+                },
+                "500": {
+                    "description": "Falha ao criar complaint"
+                },
+                "201": {
+                    "description": "Complaint criado com sucesso"
+                }
+            }
+        },
+        "get": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Complaint"
+            ],
+            "parameters": [
+                {
+                    "in": "query",
+                    "name": "init",
+                    "type": "Date",
+                    "description": "Data inicio para buscar denuncias em um intervalo de tempo. (ano - mês - dia)",
+                    "required": true
+                },
+                {
+                    "in": "query",
+                    "name": "final",
+                    "type": "Date",
+                    "description": "Data final para buscar denuncias em um intervalo de tempo (ano - mês - dia)",
+                    "required": true
+                },
+                {
+                    "in": "query",
+                    "name": "type",
+                    "type": "String",
+                    "description": "Tipo de denuncia separado por vírgula (all, Sexual, Moral, Verbal, Física, Psicológica. Patrimonial)",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "400": {
+                    "description": "data inicial e/ou final inválida"
+                },
+                "500": {
+                    "description": "Falha na requisição"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "delete": {
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "tags": [
+                "Complaint"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "id": "61c738d2ed5b7b0e4bdb379e"
+                            }
+
+                            
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação (Token de ADM)"
+                },
+                "500": {
+                    "description": "Falha na requisição"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    }
+}
