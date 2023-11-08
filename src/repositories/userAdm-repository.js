@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require("mongoose");
+const { log } = require("sharp/lib/libvips");
 const UserAdm = mongoose.model('UserAdm')
 
 exports.create = async (data) => {

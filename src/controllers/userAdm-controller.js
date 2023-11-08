@@ -19,6 +19,7 @@ exports.post = async (request, response) => {
     if (!contract.isValid()) {
         return response.status(400).send(contract.errors()).end();
     }
+
     try {
 
         let passwordEncrypted = await encryptPassword(password);
@@ -42,7 +43,7 @@ exports.post = async (request, response) => {
 }
 exports.authenticate = async (request, response) => {
     try {
-        const name = request.body.name
+        const name = await request.body.name
         const userAuth = await user.authenticate({name});
         const password = await comparePassword(request.body.password, userAuth.password);
 
@@ -59,8 +60,8 @@ exports.authenticate = async (request, response) => {
         return response.status(200).json({ token: token, city: userAuth.city });
 
     } catch (e) {
+        console.log(e)
         log("", "Error", "userAdm-controller/authenticate", "validar login");
-
         return response.status(500).send({ message: 'Falha ao processar sua requisição (login)' });
     }
 }
