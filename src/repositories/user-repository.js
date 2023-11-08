@@ -48,12 +48,7 @@ exports.delete = async(id) => {
 }
 
 exports.authenticate = async(data) => {
-    const res = await User.findOne(
-        {
-            nickname: data.nickname,
-            password: data.password 
-        }
-    );
+    const res = await User.findOne({nickname: data.nickname});
     return res;
 }
 exports.updatePassword = async(data) => {

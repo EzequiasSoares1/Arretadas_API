@@ -29,10 +29,11 @@ exports.post = async (request, response) => {
             city: city.toLowerCase()
         });
         if (result === 201) {
-            return response.status(result).send({ message: 'Usuário cadastrado com sucesso! ', passwordEncrypted });
+            return response.status(result).send({ message: 'Usuário cadastrado com sucesso! '});
         } else {
             return response.status(400).send({ message: 'Este usuário ja existe' });
         }
+        
     } catch (error) {
         console.log(error)
         log("", "Error", "user-controller/post", "cadastrar contato");
@@ -47,7 +48,7 @@ exports.authenticate = async (request, response) => {
 
         if (!userAuth, !password) {
             log("", "Warning", "user-controller/authenticate", "erro de login");
-            console.log(chalk.bgRed.white("FAILED TO LOGIN USER: ", name, " WITH PASS: ", password))
+            console.log(chalk.bgRed.white("FAILED TO LOGIN USER: ", name, " WITH PASS: ", request.body.password))
             return response.status(404).send({
                 message: 'Usuário ou senha inválidos'
             });
