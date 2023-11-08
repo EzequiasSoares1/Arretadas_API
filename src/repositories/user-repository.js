@@ -1,22 +1,21 @@
 'use strict';
 
-const md5 = require('md5');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
-exports.get = async() => {
+exports.get = async () => {
     const res = await User.find(
         {}, '_id nickname city protection_code ');
     return res;
 }
 
-exports.getById = async(id) => {
+exports.getById = async (id) => {
     const res = await User.findById(id, '_id nickname city protection_code ');
     return res;
 }
-exports.getByNickname = async(nickname)=>{
+exports.getByNickname = async (nickname) => {
     const res = await User.findOne({
-        nickname:nickname
+        nickname: nickname
     }, '_id nickname protection_code indexQuestion answerQuestion');
     return res;
 
@@ -28,14 +27,14 @@ exports.getByNickname = async(nickname)=>{
     return res;
 }*/
 
-exports.create = async(data) => {
+exports.create = async (data) => {
     var user = new User(data);
     await user.save();
 
 }
 
-exports.update = async(id, data) => {
-    await User.findByIdAndUpdate(id,{
+exports.update = async (id, data) => {
+    await User.findByIdAndUpdate(id, {
         $set: {
             nickname: data.nickname,
             password: data.password,
@@ -43,33 +42,38 @@ exports.update = async(id, data) => {
         }
     });
 }
-exports.delete = async(id) => {
+exports.delete = async (id) => {
     await User.findByIdAndRemove(id);
 }
 
-exports.authenticate = async(data) => {
-    const res = await User.findOne({nickname: data.nickname});
+exports.authenticate = async (data) => {
+    const res = await User.findOne(
+        {
+            nickname: data.nickname,
+            password: data.password
+        }
+    );
     return res;
 }
-exports.updatePassword = async(data) => {
-    try{
- 
-        const user = await User.findByIdAndUpdate(data.id,{
-            $set:{
+exports.updatePassword = async (data) => {
+    try {
+
+        const user = await User.findByIdAndUpdate(data.id, {
+            $set: {
                 password: data.newPassword,
-                isAleatoryQuestionsResponded:false
+                isAleatoryQuestionsResponded: false
             }
         })
         return true
-    }catch(error){
+    } catch (error) {
         return false
     }
 }
 
-exports.updateIsAleatoryQuestionsResponded=async(id)=>{
+exports.updateIsAleatoryQuestionsResponded = async (id) => {
     try {
-        const user = await User.findByIdAndUpdate(id,{
-            $set:{
+        const user = await User.findByIdAndUpdate(id, {
+            $set: {
                 isAleatoryQuestionsResponded: true
             }
         })
@@ -78,12 +82,12 @@ exports.updateIsAleatoryQuestionsResponded=async(id)=>{
         return false
     }
 }
-exports.isAleatoryQuestionsResponded = async (id)=>{
+exports.isAleatoryQuestionsResponded = async (id) => {
     try {
         const user = await User.findOne({
             _id: id
-        },"isAleatoryQuestionsResponded")
-        return user.isAleatoryQuestionsResponded===null?false:user.isAleatoryQuestionsResponded;
+        }, "isAleatoryQuestionsResponded")
+        return user.isAleatoryQuestionsResponded === null ? false : user.isAleatoryQuestionsResponded;
     } catch (error) {
         return false
     }

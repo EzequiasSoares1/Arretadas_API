@@ -2,7 +2,7 @@
 const ValidationContract = require('../validators/fluent-validator');
 const repository = require('../repositories/user-repository');
 const protectiveMeasureRepository = require('../repositories/protectiveMeasure-repository')
-const { encryptPassword, comparePassword } = require('../services/encryption-service');
+const md5 = require('md5');
 const authService = require('../services/auth-service');
 const chalk = require('chalk');
 const log = require('../services/log-service')
@@ -16,7 +16,7 @@ exports.recoverPassword = async (request,response)=>{
         }
         const newPass={
             id: id,
-            newPassword: encryptPassword(newPassword)
+            newPassword: md5(newPassword + global.SALT_KEY)
         }
         const result = await repository.updatePassword(newPass)
         if(result){
@@ -137,7 +137,7 @@ const createUser = async (user, protectionCodeId) => {
     try {
         await repository.create({
             nickname: user.nickname,
-            password: encryptPassword(user.password),
+            password: md5(user.password + global.SALT_KEY),
             city: user.city,
             protection_code: user.protection_code,
             indexQuestion: user.indexQuestion,
@@ -187,11 +187,10 @@ exports.authenticate = async (request,response) => {
     try {
         const { nickname, password } = request.body
         const user = await repository.authenticate({
-            nickname
+            nickname,
+            password: md5(password + global.SALT_KEY)
         });
-        const passwordOk = await comparePassword(user.body.password, password);
-
-        if (!user, !passwordOk) {
+        if (!user) {
             log("", "Warning", "user-controller/authenticate", "erro de login");
             console.log(chalk.bgRed.white("FAILED TO LOGIN USER: ", nickname, " WITH PASS: ", password))
             return response.status(404).send({
@@ -272,16 +271,14 @@ exports.updatePassword = async (request, response) =>{
         const user = { 
             id: request.body.id,
             nickname:request.body.nickname ,
-            newPassword: encryptPassword(newPassword),
-            oldPassword: request.body.oldPassword
+            newPassword: md5(request.body.newPassword + global.SALT_KEY),
+            oldPassword: md5(request.body.oldPassword + global.SALT_KEY)
         }
         const auth = await repository.authenticate({
             nickname: user.nickname,
             password: user.oldPassword
         })
-        const password = await comparePassword(auth.body.oldPassword, user.oldPassword);
-
-        if(!auth, !password){
+        if(!auth){
             log("", "Error", "user-controller/updatePassword", "Alterar senha");
 
             return response.status(401).send({ message: 'Senha atual inválida' });
@@ -299,5 +296,4 @@ exports.updatePassword = async (request, response) =>{
     }
 
 }
-
 
