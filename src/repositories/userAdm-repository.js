@@ -24,7 +24,11 @@ exports.readAll = async () => {
     const res = await UserAdm.find();
     return res;
 }
+exports.readName = async (name) => {
+    const res = await UserAdm.findOne({name: name});
 
+    return res;
+}
 exports.readOnly = async (id) => {
     const res = await UserAdm.findById({_id: id});
     return res;

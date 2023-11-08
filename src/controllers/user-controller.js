@@ -67,7 +67,7 @@ exports.getByNickname = async (request,response) => {
     try {
         const data = await repository.getByNickname(request.params.name);
         if(data==null){
-            return response.status(400).send({message:"Não encontrado"});
+            return response.status(404).send({message:"Não encontrado"});
         }
         log("", "Sucess", "user-controller/getByNickname", "resgatar dados");
         return response.status(200).send(data);

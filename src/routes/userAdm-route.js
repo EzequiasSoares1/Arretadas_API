@@ -10,11 +10,12 @@ router.post('/', authService.authorize, controller.post);
 router.post('/authenticate', controller.authenticate);
 router.post('/valid-token', controller.validToken);
 
-router.get('/user-adm', authService.authorize,  controller.read);
-router.get('/user-adm/user/:id', authService.authorize,  controller.readOne);
+router.get('/', authService.authorize, controller.read);
+router.get('/name/:name', authService.authorize, controller.readName);
+router.get('/:id', authService.authorize, controller.readOne);
 
-router.put('/user-adm/user/:id', authService.authorize, controller.update);
+router.put('/:id', authService.authorize, controller.update);
 
-router.delete('/user-adm/user/:id', authService.authorize, controller.delete);
+router.delete('/:id', authService.authorize, controller.delete);
 
 module.exports = router;

@@ -45,18 +45,23 @@ exports.authenticate = async (request, response) => {
     try {
         const name = await request.body.name
         const userAuth = await user.authenticate({name});
-        const password = await comparePassword(request.body.password, userAuth.password);
+       
 
-        if (!userAuth, !password) {
+        if (!userAuth) {
             log("", "Warning", "user-controller/authenticate", "erro de login");
             console.log(chalk.bgRed.white("FAILED TO LOGIN USER: ", name, " WITH PASS: ", request.body.password))
             return response.status(404).send({
-                message: 'Usuário ou senha inválidos'
+                message: 'Usuário inválido'
+            });
+        }
+
+        if(!comparePassword(request.body.password, userAuth.password)){
+            return response.status(404).send({
+                message: 'Senha inválida'
             });
         }
 
         const token = await authService.generateTokenAdm({name});
-
         return response.status(200).json({ token: token, city: userAuth.city });
 
     } catch (e) {
@@ -75,6 +80,20 @@ exports.validToken = async (request, response) => {
     } catch (error) {
         return response.status(401).send({ message: 'token inválido' })
 
+    }
+}
+
+exports.readName = async (request,response) => {
+    try {
+        const data = await user.readName(request.params.name);
+        if(data==null){
+            return response.status(404).send({message:"Não encontrado"});
+        }
+        log("", "Sucess", "user-controller/getByname", "resgatar dados");
+        return response.status(200).send(data);
+    } catch (e) {
+        log("", "Error", "user-controller/getByNickname", "resgatar dados");
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
 

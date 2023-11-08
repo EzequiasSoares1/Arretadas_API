@@ -1,93 +1,258 @@
 {
-    "/userAdm":{
-        "post":{
-            "tags": [
-                "User Adm"
-            ],
-            "requestBody": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "example": {
-                                "name": "Victor Monteiro ADM",
-                                "password": "123456",
-                                "city": "monteiro"
-                            }
-                        }
-                    }
-                }
-            },
-            "responses": {
-                "500": {
-                    "description": "Falha ao fazer o update"
-                },
-                "400":{
-                    "description":"Dados inválidos"
-                },
-                "201":{
-                    "description":"Criado com sucesso"
-                }
+  "/userAdm": {
+    "post": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "createUserAdm",
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "Victor Monteiro ADM",
+                "password": "123456",
+                "city": "monteiro"
+              }
             }
+          }
         }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Criado com sucesso"
+        },
+        "400": {
+          "description": "Dados inválidos"
+        },
+        "500": {
+          "description": "Falha ao fazer o update"
+        }
+      }
     },
-    "/userAdm/authenticate":{
-        "post":{
-            "tags": [
-                "User Adm"
-            ],
-            "requestBody": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "example": {
-                                "name": "Victor Monteiro ADM",
-                                "password": "123456"
-                            }
-                        }
-                    }
-                }
-            },
-            "responses": {
-                "500": {
-                    "description": "Falha ao fazer o update"
-                },
-                "404":{
-                    "description":"Usuário ou senha inválidos"
-                },
-                "200":{
-                    "description":"Ok"
-                }
-            }
+    "get": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "getAllUserAdm",
+      "responses": {
+        "200": {
+          "description": "Ok"
         }
-        
-    },
-    "/userAdm/valid-token":{
-        "post":{
-            "tags": [
-                "User Adm"
-            ],
-            "requestBody": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "example": {
-                                "oldToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVmljdG9yIE1vbnRlaXJvIEFETSIsInBhc3N3b3JkIjoiMTIzNDU2IiwiaWF0IjoxNjQwOTgwMzg1LCJleHAiOjE2NDA5ODIxODV9.m4g4MpJNfjGphugEv2Zq7cFlxYLWu0x7KxmM_YeGQn8"
-                            }
-                        }
-                    }
-                }
-            },
-            "responses": {
-                "401":{
-                    "description":"Token Inválido"
-                },
-                "200":{
-                    "description":"ok"
-                }
-            }
+      },
+      "security": [
+        {
+          "BearerAuth": []
         }
+      ]
     }
+  },
+  "/userAdm/{id}": {
+    "get": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "getUserAdmById",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Ok"
+        }
+      }
+    },
+    "put": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "updateUserAdm",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "Novo Nome",
+                "password": "Nova Senha",
+                "city": "Nova Cidade"
+              }
+            }
+          }
+        }
+      },
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Atualizado com sucesso"
+        },
+        "400": {
+          "description": "Dados inválidos"
+        },
+        "500": {
+          "description": "Falha ao fazer o update"
+        }
+      }
+    },
+    "delete": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "deleteUserAdm",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Ok"
+        },
+        "404": {
+          "description": "Usuário não encontrado"
+        },
+        "500": {
+          "description": "Falha ao fazer o update"
+        }
+      }
+    }
+  },
+  "/userAdm/authenticate": {
+    "post": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "authenticateUserAdm",
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "Victor Monteiro ADM",
+                "password": "123456"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Ok"
+        },
+        "404": {
+          "description": "Usuário ou senha inválidos"
+        },
+        "500": {
+          "description": "Falha ao fazer o update"
+        }
+      }
+    }
+  },
+  "/userAdm/valid-token": {
+    "post": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "validateAuthToken",
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "oldToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVmljdG9yIE1vbnRlaXJvIEFETSIsInBhc3N3b3JkIjoiMTIzNDU2IiwiaWF0IjoxNjQwOTgwMzg1LCJleHAiOjE2NDA5ODIxODV9.m4g4MpJNfjGphugEv2Zq7cFlxYLWu0x7KxmM_YeGQn8"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Ok"
+        },
+        "401": {
+          "description": "Token Inválido"
+        }
+      }
+    }
+  },
+  "/userAdm/name/{name}": {
+    "get": {
+      "tags": [
+        "User Adm"
+      ],
+      "operationId": "getUserAdmByName",
+      "parameters": [
+        {
+          "name": "name",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "Victor Monteiro ADM"
+          },
+          "description": "Nome do usuário administrador a ser buscado"
+        }
+      ],
+      "security": [
+        {
+          "BearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Ok"
+        },
+        "404": {
+          "description": "Nenhum usuário encontrado com o nome fornecido"
+        },
+        "500": {
+          "description": "Falha ao buscar usuários"
+        }
+      }
+    }
+  }
 }
