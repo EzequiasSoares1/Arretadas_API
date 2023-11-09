@@ -56,7 +56,7 @@ exports.authenticate = async (request, response) => {
         }
 
         if (!comparePassword(request.body.password, userAuth.password)) {
-            return response.status(404).send({
+            return response.status(401).send({
                 message: 'Senha inválida'
             });
         }

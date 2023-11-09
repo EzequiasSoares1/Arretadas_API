@@ -55,6 +55,7 @@ exports.get = async (request,response) => {
     try {
         const data = await repository.get();
         log("", "Sucess", "user-controller/get", "resgatar dados");
+        if(data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
         log("", "Error", "user-controller/get", "resgatar dados");
@@ -81,6 +82,7 @@ exports.getById = async (request,response) => {
     try {
         const data = await repository.getById(request.params.id)
         log("", "Sucess", "user-controller/getById", "resgatar dados");
+        if(data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
         log("", "Sucess", "user-controller/getById", "resgatar dados");
