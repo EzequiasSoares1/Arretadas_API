@@ -14,8 +14,8 @@ exports.post = async (request, response) => {
     contract.hasMinLen(name, 3, 'O campo name deve conter pelo menos 3 caracteres');
     contract.hasMinLen(password, 6, 'O campo password deve conter pelo menos 6 caracteres');
     contract.hasMinLen(city, 3, 'O campo city deve conter pelo menos 3 caracteres');
-  
-    
+
+
     if (!contract.isValid()) {
         return response.status(400).send(contract.errors()).end();
     }
@@ -30,11 +30,11 @@ exports.post = async (request, response) => {
             city: city.toLowerCase()
         });
         if (result === 201) {
-            return response.status(result).send({ message: 'Usuário cadastrado com sucesso! '});
+            return response.status(result).send({ message: 'Usuário cadastrado com sucesso! ' });
         } else {
             return response.status(400).send({ message: 'Este usuário ja existe' });
         }
-        
+
     } catch (error) {
         console.log(error)
         log("", "Error", "user-controller/post", "cadastrar contato");
@@ -44,8 +44,8 @@ exports.post = async (request, response) => {
 exports.authenticate = async (request, response) => {
     try {
         const name = await request.body.name
-        const userAuth = await user.authenticate({name});
-       
+        const userAuth = await user.authenticate({ name });
+
 
         if (!userAuth) {
             log("", "Warning", "user-controller/authenticate", "erro de login");
@@ -55,13 +55,13 @@ exports.authenticate = async (request, response) => {
             });
         }
 
-        if(!comparePassword(request.body.password, userAuth.password)){
+        if (!comparePassword(request.body.password, userAuth.password)) {
             return response.status(404).send({
                 message: 'Senha inválida'
             });
         }
 
-        const token = await authService.generateTokenAdm({name});
+        const token = await authService.generateTokenAdm({ name });
         return response.status(200).json({ token: token, city: userAuth.city });
 
     } catch (e) {
@@ -83,11 +83,12 @@ exports.validToken = async (request, response) => {
     }
 }
 
-exports.readName = async (request,response) => {
+exports.readName = async (request, response) => {
     try {
         const data = await user.readName(request.params.name);
-        if(data==null){
-            return response.status(404).send({message:"Não encontrado"});
+
+        if (data == null) {
+            return response.status(404).send({ message: "Não encontrado" });
         }
         log("", "Sucess", "user-controller/getByname", "resgatar dados");
         return response.status(200).send(data);
@@ -114,9 +115,18 @@ exports.delete = async (request, response) => {
 }
 
 exports.update = async (request, response) => {
-    const nameUser = request.body.name;
-    const passwordEncrypted = await encryptPassword(request.body.password);
-    const updateUser = await user.updateUser(request.params.id, nameUser, passwordEncrypted);
-    if (updateUser === null) return response.status(404).send({ message: 'Usuário inexistente!' });
-    return response.status(200).send({ message: 'Usuário editado com sucesso!' });
+    try {
+        const nameUser = request.body.name;
+        const passwordEncrypted = null;
+
+        if (request.body.password !== null) passwordEncrypted = await encryptPassword(request.body.password);
+        const updateUser = await user.updateUser(request.params.id, nameUser, passwordEncrypted);
+        if (updateUser === null) return response.status(404).send({ message: 'Nome de usuario já existe ou seu usuario não existe' });
+
+        return response.status(200).send({ message: 'Usuário editado com sucesso!' });
+
+    } catch (e) {
+        log("", "Error", "user-controller/update", "resgatar dados");
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
 }

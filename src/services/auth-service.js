@@ -12,7 +12,7 @@ exports.generateToken = async (data) => {
 
 exports.generateTokenAdm = async (data) => {
     log("", "Info", "auth-service/generateToken", "gerar token ok");
-    return jwt.sign(data, global.SALT_KEY, { expiresIn: '30 minutes' });
+    return jwt.sign(data, global.SALT_KEY, { expiresIn: '1d' });
 
 }
 

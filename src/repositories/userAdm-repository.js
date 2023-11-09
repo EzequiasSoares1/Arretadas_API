@@ -16,7 +16,7 @@ exports.create = async (data) => {
 }
 
 exports.authenticate = async (data) => {
-    const res = await UserAdm.findOne({name: data.name});
+    const res = await UserAdm.findOne({ name: data.name });
     return res;
 }
 
@@ -25,31 +25,41 @@ exports.readAll = async () => {
     return res;
 }
 exports.readName = async (name) => {
-    const res = await UserAdm.findOne({name: name});
-
+    const res = await UserAdm.findOne({ name: name });
+    if (res !== null) res.password = null;
     return res;
 }
 exports.readOnly = async (id) => {
-    const res = await UserAdm.findById({_id: id});
+    const res = await UserAdm.findById({ _id: id });
+    if (res !== null) res.password = null;
     return res;
 }
 
-exports.deleteUser = async(id) => {
-    const res = await UserAdm.findByIdAndDelete({_id: id});
+exports.deleteUser = async (id) => {
+    const res = await UserAdm.findByIdAndDelete({ _id: id });
     return res;
 }
 
-exports.updateUser = async(id, name, password) => {
-    const userRequest = this.readOnly(id);
-    if(userRequest !== null) {
-        if(name !== null) userRequest.name = name;
-        if(password !== null) userRequest.password = password;
-        const res = await UserAdm.findByIdAndUpdate({_id: id}, userRequest);
-        return res;
+exports.updateUser = async (id, name, password) => {
+    const userRequest = await this.readOnly(id);
+
+    if (userRequest === null) {
+        return null;
     }
-    return null;
-}
 
+    if (name !== null) {
+        const userName = await this.readName(name);
+
+        if (userName !== null) {
+            if (userName.name !== userRequest.name) return null;
+        }
+    }
+
+    if (name !== null) userRequest.name = name;
+    if (password !== null) userRequest.password = password;
+    const res = await UserAdm.findByIdAndUpdate({ _id: id }, userRequest);
+    return res;
+}
 /*
 TODO: ROUTE OF AUTHENTICATE
 AND REFACTOR THE CODE
