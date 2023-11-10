@@ -34,6 +34,20 @@ exports.create = async (data) => {
 }
 
 exports.update = async (id, data) => {
+    const userRequest = await this.getById(id);
+    
+    if (userRequest === null) {
+        return 'user not found';
+    }
+    const userName = await this.getByNickname(data.nickname);
+
+    if (userName !== null) {
+      
+
+        if (userName.nickname !== userRequest.nickname)
+            return "nickname já existe";
+    }
+
     await User.findByIdAndUpdate(id, {
         $set: {
             nickname: data.nickname,
@@ -41,6 +55,8 @@ exports.update = async (id, data) => {
             protection_code: data.protection_code
         }
     });
+    return true;
+
 }
 exports.delete = async (id) => {
     await User.findByIdAndRemove(id);
