@@ -196,6 +196,10 @@ exports.put = async (request, response) => {
 
 exports.delete = async (request, response) => {
     try {
+    
+        const data = await repository.getById(request.body.id)
+        if(data === null) return response.status(404).send(data);
+
         await repository.delete(request.body.id);
         log("", "Sucess", "user-controller/delete", "remover contato");
 
