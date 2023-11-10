@@ -51,6 +51,7 @@ exports.updateUser = async (id, name, password) => {
         const userName = await this.readName(name);
 
         if (userName !== null) {
+            console.log(userName)
             if (userName.name !== userRequest.name) return null;
         }
     }

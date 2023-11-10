@@ -115,17 +115,19 @@ exports.delete = async (request, response) => {
 }
 
 exports.update = async (request, response) => {
+
     try {
         const nameUser = request.body.name;
-        const passwordEncrypted = null;
+        let passwordEncrypted = null;
 
-        if (request.body.password !== null) passwordEncrypted = await encryptPassword(request.body.password);
+        if (request.body.password !== null) passwordEncrypted = encryptPassword(request.body.password);
         const updateUser = await user.updateUser(request.params.id, nameUser, passwordEncrypted);
         if (updateUser === null) return response.status(404).send({ message: 'Nome de usuario já existe ou seu usuario não existe' });
 
         return response.status(200).send({ message: 'Usuário editado com sucesso!' });
 
     } catch (e) {
+        console.log(e)
         log("", "Error", "user-controller/update", "resgatar dados");
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
