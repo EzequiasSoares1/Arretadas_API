@@ -46,7 +46,7 @@ const schema = new Schema({
             type: String,
             required: [true, 'O tipo de permissão é obrigatória'],
             enum: ['user', 'admin'],
-            default: 'admin'
+            default: 'user'
         }
     ]
 });

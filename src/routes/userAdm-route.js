@@ -6,16 +6,18 @@ const controller = require('../controllers/userAdm-controller');
 const authService = require('../services/auth-service')
 
 
-router.post('/', authService.authorize, controller.post);
+router.post('/', authService.isAdmin, controller.post);
 router.post('/authenticate', controller.authenticate);
 router.post('/valid-token', controller.validToken);
 
-router.get('/', authService.authorize, controller.read);
-router.get('/name/:name', authService.authorize, controller.readName);
-router.get('/:id', authService.authorize, controller.readOne);
+router.get('/', authService.isAdmin, controller.read);
+router.get('/name/:name', authService.isAdmin, controller.readName);
+router.get('/:id', authService.isAdmin, controller.readOne);
 
-router.put('/:id', authService.authorize, controller.update);
+router.put('/:id', authService.isAdmin, controller.update);
 
-router.delete('/:id', authService.authorize, controller.delete);
+router.delete('/:id', authService.isAdmin, controller.delete);
 
 module.exports = router;
+
+
