@@ -10,7 +10,7 @@ const { encryptPassword, comparePassword } = require('../services/encryption-ser
 
 exports.post = async (request, response) => {
     let contract = new ValidationContract();
-    const { name, password, city } = request.body;
+    const { name, password, roles, city } = request.body;
     contract.hasMinLen(name, 3, 'O campo name deve conter pelo menos 3 caracteres');
     contract.hasMinLen(password, 6, 'O campo password deve conter pelo menos 6 caracteres');
     contract.hasMinLen(city, 3, 'O campo city deve conter pelo menos 3 caracteres');
@@ -27,6 +27,7 @@ exports.post = async (request, response) => {
         let result = await user.create({
             name: name,
             password: passwordEncrypted,
+            roles: roles,
             city: city.toLowerCase()
         });
         if (result === 201) {
@@ -45,6 +46,7 @@ exports.authenticate = async (request, response) => {
     try {
         const name = await request.body.name
         const userAuth = await user.authenticate({ name });
+        const roles = userAuth.roles;
 
 
         if (!userAuth) {
@@ -61,7 +63,7 @@ exports.authenticate = async (request, response) => {
             });
         }
 
-        const token = await authService.generateTokenAdm({ name });
+        const token = await authService.generateTokenAdm({ name, roles });
         return response.status(200).json({ token: token, city: userAuth.city });
 
     } catch (e) {
@@ -132,3 +134,5 @@ exports.update = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
+
+
