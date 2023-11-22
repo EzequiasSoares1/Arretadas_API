@@ -52,7 +52,7 @@ exports.isAdmin = function (req, res, next) {
     if (!token) {
         log("", "warning", "auth-service/isAdmin", "Token Invalido");
         res.status(401).json({
-            message: 'Token Inválido'
+            message: 'Token Inválido.'
         });
     } else {
         jwt.verify(token, global.SALT_KEY, function (error, decoded) {
