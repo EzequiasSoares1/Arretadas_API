@@ -47,7 +47,8 @@ exports.authorize = function (req, res, next) {
 };
 
 exports.isAdmin = function (req, res, next) {
-    var token = req.headers['authorization'].split(' ')[1]
+  
+    var token = req.headers['authorization']
 
     if (!token) {
         log("", "warning", "auth-service/isAdmin", "Token Invalido");
@@ -55,6 +56,8 @@ exports.isAdmin = function (req, res, next) {
             message: 'Token Inválido.'
         });
     } else {
+        token = token.split(' ')[1]
+
         jwt.verify(token, global.SALT_KEY, function (error, decoded) {
             if (error) {
                 log("", "Error", "auth-service/isAdmin", "Token Invalido");

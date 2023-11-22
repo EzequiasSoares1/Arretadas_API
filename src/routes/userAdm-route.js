@@ -6,7 +6,7 @@ const controller = require('../controllers/userAdm-controller');
 const authService = require('../services/auth-service')
 
 
-router.post('/', controller.post);
+router.post('/', authService.isAdmin, controller.post);
 router.post('/authenticate', controller.authenticate);
 router.post('/valid-token', controller.validToken);
 
