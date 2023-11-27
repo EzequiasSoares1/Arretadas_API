@@ -20,8 +20,13 @@ exports.getByName = async(request, response) => {
     try{
         const data = await repository.getByName(request.params.name);
         log("","Sucess","usefulcontacts-controller/getByName","resgatar dados");
-
-        return response.status(200).send(data);
+        if(data === null){
+            return response.status(400).send({ message: 'Usuario não existe'});
+        }
+        else{
+            return response.status(200).send(data);
+        }
+       
     }catch(e) {
         log("","Error","usefulcontacts-controller/getByName","resgatar dados");
 
@@ -90,11 +95,18 @@ exports.put = async (request, response) => {
 
 exports.delete = async(request, response) => {
     try{
-    await repository.delete(request.query.id);
+    const data = await repository.getById(request.body.id)
+    await repository.delete(request.body.id);
         log("","Sucess","usefulcontacts-controller/delete","remover contato");
-        return response.status(200).send({ message: 'Contato removido com sucesso!'});
+        if (data !== null ) {
+            return response.status(200).send({ message: 'Contato removido com sucesso!'});
+        } else {
+            return  response.status(400).send({ message: 'Usuário não existe'});
+        }
     }catch(e) {
         log("","Error","usefulcontacts-controller/delete","remover contato");
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
 }
+
+

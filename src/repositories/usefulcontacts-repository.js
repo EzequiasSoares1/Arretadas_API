@@ -36,3 +36,4 @@ exports.update = async (id, data) => {
 exports.delete = async(id) => {    
     await UsefulContacts.findByIdAndRemove(id);
 }
+
