@@ -1,11 +1,25 @@
 {
     "/alert": {
-        "post": {
+        "get": {
+            "tags": [
+                "Alerts"
+            ],
+            "operationId": "getAllAlerts",
             "security": [
                 {
                     "bearerAuth": []
                 }
             ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        },
+        "post": {
             "tags": [
                 "Alerts"
             ],
@@ -15,7 +29,7 @@
                         "schema": {
                             "type": "object",
                             "example": {
-                                "id": "61a81b6db632390018cd9c77",
+                                "userId": "61a81b6db632390018cd9c77",
                                 "latitude": "-15.612396444791289",
                                 "longitude": "-56.09546959514409",
                                 "date": "2021-10-26",
@@ -25,6 +39,11 @@
                     }
                 }
             },
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
             "responses": {
                 "401": {
                     "description": "Precisa de um token para autenticação"
@@ -40,12 +59,80 @@
                 }
             }
         },
-        "get": {
+        "put": {
+            "tags": [
+                "Alerts"
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "_id": "id do alert",
+                                "latitude": "Nova latitude",
+                                "longitude": "Nova longitude"
+                            }
+                        }
+                    }
+                }
+            },
             "security": [
                 {
                     "bearerAuth": []
                 }
             ],
+            "responses": {
+                "200": {
+                    "description": "Atualizado com sucesso"
+                },
+                "400": {
+                    "description": "Id inválido"
+                },
+                "500": {
+                    "description": "Você precisa ser ADM para realizar essa operação"
+                }
+            }
+        }
+    },
+    "/alert/{id}": {
+        "delete": {
+            "tags": [
+                "Alerts"
+            ],
+            "operationId": "deleteAlert",
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "id": "61a81b6db632390018cd9c77"
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "responses": {
+                "500": {
+                    "description": "Você precisa ser ADM para realizar essa operação"
+                },
+                "401": {
+                    "description": "Você precisa de um token de ADM para fazer essa operação"
+                },
+                "200": {
+                    "description": "Alert removido com sucesso!"
+                }
+            }
+        }
+    },
+    "alert/date/": {
+        "get": {
             "tags": [
                 "Alerts"
             ],
@@ -63,6 +150,18 @@
                     "type": "Date",
                     "description": "Data final para buscar alerts em um intervalo de tempo (ano - mês - dia)",
                     "required": true
+                },
+                {
+                    "in": "query",
+                    "name": "city",
+                    "type": "String",
+                    "description": "Digite o nome da cidade",
+                    "required": true
+                }
+            ],
+            "security": [
+                {
+                    "bearerAuth": []
                 }
             ],
             "responses": {
@@ -76,37 +175,100 @@
                     "description": "ok"
                 }
             }
-        },
-        "delete": {
+        }
+    },
+    "/alert/id/{id}": {
+        "get": {
+            "tags": [
+                "Alerts"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "type": "string",
+                    "description": "ID do alerta",
+                    "required": true
+                }
+            ],
             "security": [
                 {
                     "bearerAuth": []
                 }
             ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao buscar alert - ID inválido"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/alert/user/{id}": {
+        "get": {
             "tags": [
                 "Alerts"
             ],
-            "requestBody": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "example": {
-                                "id": "61a81b6db632390018cd9c77"
-                            }
-                        }
-                    }
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "type": "string",
+                    "description": "ID do usuário",
+                    "required": true
                 }
-            },
+            ],
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
             "responses": {
-                "500": {
-                    "description": "Você precisa ser ADM para realizar essa operação"
+                "401": {
+                    "description": "Precisa de um token para autenticação"
                 },
-                "401":{
-                    "description":"Você precisa de um token de ADM para fazer essa operação"
+                "500": {
+                    "description": "Falha ao buscar alert - ID de usuário inválido"
                 },
                 "200": {
-                    "description": "Alert removido com sucesso!"
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/alert/city/{city}": {
+        "get": {
+            "tags": [
+                "Alerts"
+            ],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "city",
+                    "type": "string",
+                    "description": "Nome da cidade",
+                    "required": true
+                }
+            ],
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Falha ao buscar alert - Cidade inválida"
+                },
+                "200": {
+                    "description": "ok"
                 }
             }
         }

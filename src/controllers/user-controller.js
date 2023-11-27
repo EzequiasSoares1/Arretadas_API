@@ -168,7 +168,7 @@ exports.put = async (request, response) => {
         let contract = new ValidationContract();
         contract.hasMinLen(request.body.nickname, 3, 'O nome deve conter pelo menos 3 caracteres');
         contract.hasMinLen(request.body.password, 6, 'O password deve conter pelo menos 6 caracteres');
-    
+
         if (!contract.isValid()) {
             log("", "warning", "user-controller/post", "validar contrato");
             return response.status(400).send(contract.errors()).end();
@@ -195,9 +195,9 @@ exports.put = async (request, response) => {
 
 exports.delete = async (request, response) => {
     try {
-    
+
         const data = await repository.getById(request.body.id)
-        if(data === null) return response.status(404).send(data);
+        if (data === null) return response.status(404).send(data);
 
         await repository.delete(request.body.id);
         log("", "Sucess", "user-controller/delete", "remover contato");
@@ -206,7 +206,7 @@ exports.delete = async (request, response) => {
     } catch (e) {
         log("", "Error", "user-controller/delete", "remover contato");
 
-        return response.status(500).send({ message: 'Falha ao processar sua requisição, id invalido'});
+        return response.status(500).send({ message: 'Falha ao processar sua requisição, id invalido' });
     }
 }
 

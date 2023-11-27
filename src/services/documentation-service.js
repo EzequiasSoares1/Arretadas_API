@@ -53,6 +53,15 @@ exports.documentationService = (app) => {
 
     //alert
     doc['paths']['/alert'] = alert['/alert']
+    doc['paths']['/alert/{id}'] = alert['/alert/{id}']
+    doc['paths']['/alert/date/'] = alert['/alert/date/']
+    doc['paths']['/alert/id/{id}'] = alert['/alert/id/{id}']
+    doc['paths']['/alert/user/{id}'] = alert['/alert/user/{id}']
+    doc['paths']['/alert/city/{city}'] = alert['/alert/city/{city}']
+
+
+
+
 
     //protectiveMeasure
     doc['paths']['/protective-measure'] = protectiveMeasure['/protective-measure']
