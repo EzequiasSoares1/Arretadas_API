@@ -35,8 +35,7 @@
                                 "password": "123456",
                                 "indexQuestion": 3,
                                 "answerQuestion": "resposta exemplo",
-                                "city": "Monteiro",
-                                "roles": "admin"
+                                "city": "Monteiro"
                             }
                         }
                     }

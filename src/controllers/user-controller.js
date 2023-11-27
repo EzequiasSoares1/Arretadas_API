@@ -141,7 +141,6 @@ const createUser = async (request, protectionCodeId) => {
     try {
 
         if (await repository.getByNickname(request.nickname) !== null) return 'user já cadastrado';
-        if (request.roles === null || request.roles !== "admin") request.roles = "user";
 
         const user = await repository.create({
             nickname: request.nickname,
@@ -150,7 +149,7 @@ const createUser = async (request, protectionCodeId) => {
             protection_code: request.protection_code,
             indexQuestion: request.indexQuestion,
             answerQuestion: request.answerQuestion,
-            roles: request.roles
+            roles: "user"
         });
         protectionCodeId ? await protectiveMeasureRepository.update(protectionCodeId) : ''
 

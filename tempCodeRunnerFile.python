@@ -1,0 +1,28 @@
+def ehGenomaValido(sequencia):
+    n = len(sequencia)
+    for i in range(1, n // 2 + 1):
+        for j in range(n - 2 * i + 1):
+            if sequencia[j:j + i] == sequencia[j + i:j + 2 * i]:
+                return False
+    return True
+
+
+def backtracking(n, sequencia):
+    if n == 0:
+        return sequencia
+
+    for base in "NOP":
+        nova_sequencia = sequencia + base
+
+        if ehGenomaValido(nova_sequencia):
+            resultado = backtracking(n - 1, nova_sequencia)
+            if resultado:
+                return resultado
+
+    return ""
+
+
+# Exemplo de uso:
+n_value = int(input())
+resultado = backtracking(n_value,"")
+print(resultado)
