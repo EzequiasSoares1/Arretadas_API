@@ -8,7 +8,13 @@ exports.get = async(request, response) => {
         const data = await repository.get();
         log("","Sucess","usefulcontacts-controller/get","resgatar dados");
 
-        return response.status(200).send(data);
+        if(data === null){
+            return response.status(404).send({ message: 'Não existe nenhum usuário'});
+        }
+        else{
+            return response.status(200).send(data);
+        }
+       
     }catch(e) {
         log("","Error","usefulcontacts-controller/get","resgatar dados");
 
@@ -21,7 +27,7 @@ exports.getByName = async(request, response) => {
         const data = await repository.getByName(request.params.name);
         log("","Sucess","usefulcontacts-controller/getByName","resgatar dados");
         if(data === null){
-            return response.status(400).send({ message: 'Usuario não existe'});
+            return response.status(404).send({ message: 'Usuario não existe'});
         }
         else{
             return response.status(200).send(data);
@@ -51,7 +57,12 @@ exports.getById = async(request, response) => {
     try{
         const data = await repository.getById(request.params.id)
         log("","Sucess","usefulcontacts-controller/getById","resgatar dados");
-        return response.status(200).send(data);
+        if(data === null){
+            return response.status(404).send({ message: 'Usuario não existe'});
+        }
+        else{
+            return response.status(200).send(data);
+        }
 
         }catch(e) {
         log("","Error","usefulcontacts-controller/getById","resgatar dados");
@@ -101,7 +112,7 @@ exports.delete = async(request, response) => {
         if (data !== null ) {
             return response.status(200).send({ message: 'Contato removido com sucesso!'});
         } else {
-            return  response.status(400).send({ message: 'Usuário não existe'});
+            return  response.status(404).send({ message: 'Usuário não existe'});
         }
     }catch(e) {
         log("","Error","usefulcontacts-controller/delete","remover contato");
