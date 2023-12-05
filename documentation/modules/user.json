@@ -87,6 +87,25 @@
             }
         }
     },
+    "/user/city/{city}": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "operationId": "getAllUserByCity",
+          "parameters": [{"city": "id"}],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok"
+            }
+          }
+        }
+    },
     "/user/{name}": {
         "get": {
             "tags": [

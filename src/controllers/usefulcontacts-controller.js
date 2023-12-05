@@ -16,7 +16,7 @@ exports.get = async(request, response) => {
         }
        
     }catch(e) {
-        log("","Error","usefulcontacts-controller/get","resgatar dados");
+        log("","Error","usefulcontacts-controller/get","resgatar dados: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
@@ -34,7 +34,7 @@ exports.getByName = async(request, response) => {
         }
        
     }catch(e) {
-        log("","Error","usefulcontacts-controller/getByName","resgatar dados");
+        log("","Error","usefulcontacts-controller/getByName","resgatar dados: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
@@ -47,7 +47,7 @@ exports.getByCity = async (request, response) => {
         log("", "Sucess", "usefulcontacts-controller/getByCity", "resgatar dados por cidade");
         return data.length ? response.status(200).send(data) : response.status(404).send({ message: 'Cidade não encontrada. Tente novamente!' });
     }catch(e) {
-        log("","Error","usefulcontacts-controller/getByCity","resgatar dados por cidade");
+        log("","Error","usefulcontacts-controller/getByCity","resgatar dados por cidade: "+e);
 
         return response.status(500).send({ message: 'Cidade não encontrada. Tente novamente!'});
     }
@@ -65,7 +65,7 @@ exports.getById = async(request, response) => {
         }
 
         }catch(e) {
-        log("","Error","usefulcontacts-controller/getById","resgatar dados");
+        log("","Error","usefulcontacts-controller/getById","resgatar dados: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
 }
@@ -86,7 +86,7 @@ exports.post = async(request, response) => {
         log("","Sucess","usefulcontacts-controller/post","cadastrar contato");
         return response.status(201).send({ message: 'Contato cadastrado com sucesso!' });
     }catch(e) {
-        log("","Error","usefulcontacts-controller/post","cadastrar contato");
+        log("","Error","usefulcontacts-controller/post","cadastrar contato: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
 }
@@ -99,7 +99,7 @@ exports.put = async (request, response) => {
 
         return response.status(200).send({ message: 'Contato atualizado com sucesso!'});
     }catch(e) {
-        log("","Error","usefulcontacts-controller/put","atualizar contato");
+        log("","Error","usefulcontacts-controller/put","atualizar contato: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
 }
@@ -115,7 +115,7 @@ exports.delete = async(request, response) => {
             return  response.status(404).send({ message: 'Usuário não existe'});
         }
     }catch(e) {
-        log("","Error","usefulcontacts-controller/delete","remover contato");
+        log("","Error","usefulcontacts-controller/delete","remover contato: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição'});
     }
 }

@@ -10,7 +10,7 @@ exports.get = async (request, response) => {
         log("", "Sucess", "friendContact-controller/get", "resgatar dados");
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "frinedContact-controller/get", "resgatar dados");
+        log("", "Error", "frinedContact-controller/get", "resgatar dados: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
@@ -22,7 +22,7 @@ exports.getByName = async (request, response) => {
         log("", "Sucess", "friendContact-controller/getByName", "resgatar dados");
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "friendContact-controller/get", "resgatar dados");
+        log("", "Error", "friendContact-controller/get", "resgatar dados: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
@@ -35,7 +35,7 @@ exports.getById = async (request, response) => {
 
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "friendContact-controller/getById", "resgatar dados");
+        log("", "Error", "friendContact-controller/getById", "resgatar dados: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
@@ -48,7 +48,7 @@ exports.getByUser = async (request, response) => {
         log("", "Sucess", "friendContact-controller/getByUser", "resgatar dados");
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "friendContact-controller/getByUser", "resgatar dados");
+        log("", "Error", "friendContact-controller/getByUser", "resgatar dados: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
@@ -85,7 +85,7 @@ exports.post = async (request, response) => {
             message: 'Contato criado com sucesso!'
         })
     } catch (e) {
-        log("", "Error", "friendContact-controller/post", "cadastrar contato");
+        log("", "Error", "friendContact-controller/post", "cadastrar contato: "+e);
         return response.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
@@ -112,7 +112,7 @@ exports.put = async (request, response) => {
     } catch (e) {
 
         response.status(500).send({ message: 'Falha ao processar sua requisição' });
-        log("", "Error", "friendContact-controller/put", "atualizar contato");
+        log("", "Error", "friendContact-controller/put", "atualizar contato: "+e);
     }
 }
 
@@ -126,7 +126,7 @@ exports.delete = async (request, response) => {
         return response.status(200).send({ message: 'Contato removido com sucesso!' });
     } catch (e) {
 
-        log("", "Error", "friendContact-controller/delete", "remover contato");
+        log("", "Error", "friendContact-controller/delete", "remover contato: "+e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }

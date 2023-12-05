@@ -93,26 +93,21 @@
                     "description": "Você precisa ser ADM para realizar essa operação"
                 }
             }
-        }
-    },
-    "/alert/{id}": {
+        },
         "delete": {
             "tags": [
                 "Alerts"
             ],
             "operationId": "deleteAlert",
-            "requestBody": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "example": {
-                                "id": "61a81b6db632390018cd9c77"
-                            }
-                        }
-                    }
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "type": "string",
+                    "description": "ID do alerta",
+                    "required": true
                 }
-            },
+            ],
             "security": [
                 {
                     "bearerAuth": []
@@ -127,52 +122,6 @@
                 },
                 "200": {
                     "description": "Alert removido com sucesso!"
-                }
-            }
-        }
-    },
-    "alert/date/": {
-        "get": {
-            "tags": [
-                "Alerts"
-            ],
-            "parameters": [
-                {
-                    "in": "query",
-                    "name": "init",
-                    "type": "Date",
-                    "description": "Data inicio para buscar alerts em um intervalo de tempo (ano - mês - dia)",
-                    "required": true
-                },
-                {
-                    "in": "query",
-                    "name": "final",
-                    "type": "Date",
-                    "description": "Data final para buscar alerts em um intervalo de tempo (ano - mês - dia)",
-                    "required": true
-                },
-                {
-                    "in": "query",
-                    "name": "city",
-                    "type": "String",
-                    "description": "Digite o nome da cidade",
-                    "required": true
-                }
-            ],
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "responses": {
-                "401": {
-                    "description": "Precisa de um token para autenticação"
-                },
-                "500": {
-                    "description": "Informe uma data de inicio e uma data de fim"
-                },
-                "200": {
-                    "description": "ok"
                 }
             }
         }
@@ -266,6 +215,52 @@
                 },
                 "500": {
                     "description": "Falha ao buscar alert - Cidade inválida"
+                },
+                "200": {
+                    "description": "ok"
+                }
+            }
+        }
+    },
+    "/alert/date": {
+        "get": {
+            "tags": [
+                "Alerts"
+            ],
+            "parameters": [
+                {
+                    "in": "query",
+                    "name": "init",
+                    "type": "Date",
+                    "description": "Data inicio para buscar alerts em um intervalo de tempo (ano - mês - dia)",
+                    "required": true
+                },
+                {
+                    "in": "query",
+                    "name": "final",
+                    "type": "Date",
+                    "description": "Data final para buscar alerts em um intervalo de tempo (ano - mês - dia)",
+                    "required": true
+                },
+                {
+                    "in": "query",
+                    "name": "city",
+                    "type": "String",
+                    "description": "Digite o nome da cidade",
+                    "required": true
+                }
+            ],
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "responses": {
+                "401": {
+                    "description": "Precisa de um token para autenticação"
+                },
+                "500": {
+                    "description": "Informe uma data de inicio e uma data de fim"
                 },
                 "200": {
                     "description": "ok"

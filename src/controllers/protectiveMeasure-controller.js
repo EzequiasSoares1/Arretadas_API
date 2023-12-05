@@ -10,6 +10,6 @@ exports.validate = async(request, response) =>{
         log("", "Sucess", "protectiveMeasure/validate", "validar código de medida protetiva");
         return response.status(200).send({ message: 'Código encontrado'});
     }
-    log("", "Error", "protectiveMeasure/validate", "validar código de medida protetiva");
+    log("", "Error", "protectiveMeasure/validate", "validar código de medida protetiva ");
     return response.status(400).send({ message: 'Código não encontrado ou já utilizado'});
 }

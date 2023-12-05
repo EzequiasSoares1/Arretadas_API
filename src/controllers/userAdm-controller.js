@@ -38,7 +38,7 @@ exports.post = async (request, response) => {
 
     } catch (error) {
         console.log(error)
-        log("", "Error", "user-controller/post", "cadastrar contato");
+        log("", "Error", "user-controller/post", "cadastrar contato: "+error);
         return response.status(500).send({ message: 'Falha ao processar sua requisição', erro: error });
     }
 }
@@ -66,9 +66,8 @@ exports.authenticate = async (request, response) => {
         const token = await authService.generateTokenAdm({ name, roles: "admin" });
         return response.status(200).json({ token: token, city: userAuth.city });
 
-    } catch (e) {
-        console.log(e)
-        log("", "Error", "userAdm-controller/authenticate", "validar login");
+    } catch (error) {
+        log("", "Error", "userAdm-controller/authenticate", "validar login: "+error);
         return response.status(500).send({ message: 'Falha ao processar sua requisição (login)' });
     }
 }
@@ -80,6 +79,7 @@ exports.validToken = async (request, response) => {
         return response.status(200).send({ message: 'token ok' })
 
     } catch (error) {
+        log("", "Error", "userAdm-controller/validToken", "validToken: "+ error);
         return response.status(401).send({ message: 'token inválido' })
 
     }
@@ -94,8 +94,8 @@ exports.readName = async (request, response) => {
         }
         log("", "Sucess", "user-controller/getByname", "resgatar dados");
         return response.status(200).send(data);
-    } catch (e) {
-        log("", "Error", "user-controller/getByNickname", "resgatar dados");
+    } catch (error) {
+        log("", "Error", "user-controller/getByNickname", "resgatar dados: "+ error);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -128,9 +128,8 @@ exports.update = async (request, response) => {
 
         return response.status(200).send({ message: 'Usuário editado com sucesso!' });
 
-    } catch (e) {
-        console.log(e)
-        log("", "Error", "user-controller/update", "resgatar dados");
+    } catch (error) {
+        log("", "Error", "user-controller/update", "resgatar dados: "+ error);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }

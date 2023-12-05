@@ -58,7 +58,28 @@ exports.get = async (request, response) => {
         if (data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "user-controller/get", "resgatar dados");
+        log("", "Error", "user-controller/get", e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+
+    }
+}
+exports.getByCity = async (request, response) => {
+
+    try {
+        const validCitys = ['garanhuns', 'monteiro', 'cidade n/d']
+        
+        if (!request.body.city || !validCitys.some(validCity => validCity === request.body.city.toLowerCase())) {
+            log("", "Warning", "complaint-controller/getByTypeAndCity", "city invalida");
+            return response.status(400).send({ message: "data ou cidade inválida" })
+        }
+        
+        const data = await repository.getByCity(request.params.city);
+        log("", "Sucess", "user-controller/getByCity", "resgatar dados");
+        if (data === null) return response.status(404).send(data);
+        return response.status(200).send(data);
+
+    } catch (e) {
+        log("", "Error", "user-controller/getByCity", e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
 
     }
@@ -73,7 +94,7 @@ exports.getByNickname = async (request, response) => {
         log("", "Sucess", "user-controller/getByNickname", "resgatar dados");
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "user-controller/getByNickname", "resgatar dados");
+        log("", "Error", "user-controller/getByNickname", e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -85,7 +106,7 @@ exports.getById = async (request, response) => {
         if (data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Sucess", "user-controller/getById", "resgatar dados");
+        log("", "Sucess", "user-controller/getById", e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -157,7 +178,7 @@ const createUser = async (request, protectionCodeId) => {
         return true
     } catch (error) {
         log(error)
-        log("", "Error", "user-controller/post", "cadastrar contato");
+        log("", "Error", "user-controller/post", e);
         return false
     }
 }
@@ -188,7 +209,7 @@ exports.put = async (request, response) => {
 
     } catch (error) {
         log(error)
-        log("", "Error", "user-controller/put", "atualizar contato");
+        log("", "Error", "user-controller/put", e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -204,7 +225,7 @@ exports.delete = async (request, response) => {
 
         return response.status(200).send({ message: 'User removido com sucesso!' });
     } catch (e) {
-        log("", "Error", "user-controller/delete", "remover contato");
+        log("", "Error", "user-controller/delete", "remover contato: " + e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição, id invalido' });
     }
@@ -218,7 +239,7 @@ exports.authenticate = async (request, response) => {
             password: md5(password + global.SALT_KEY)
         });
         if (!user) {
-            log("", "Warning", "user-controller/authenticate", "erro de login");
+            log("", "Warning", "user-controller/authenticate", "erro de login: " + e);
             console.log(chalk.bgRed.white("FAILED TO LOGIN USER: ", nickname, " WITH PASS: ", password))
             return response.status(404).send({
                 message: 'Usuário ou senha inválidos'
@@ -246,7 +267,7 @@ exports.authenticate = async (request, response) => {
             }
         );
     } catch (e) {
-        log("", "Error", "user-controller/authenticate", "validar login");
+        log("", "Error", "user-controller/authenticate", "validar login: " + e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição (login)' });
     }
@@ -317,7 +338,7 @@ exports.updatePassword = async (request, response) => {
             return response.status(200).send({ message: 'Senha alterada com Sucesso!' });
         }
     } catch (e) {
-        log("", "Error", "user-controller/updatePassword", "Alterar senha");
+        log("", "Error", "user-controller/updatePassword", "Alterar senha: " + e);
 
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }

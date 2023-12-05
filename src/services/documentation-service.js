@@ -27,6 +27,7 @@ exports.documentationService = (app) => {
     //User
     doc['paths']['/user'] = user['/user']
     doc['paths']['/user/{name}'] = user['/user/{name}']
+    doc['paths']['/user/city/{city}'] = user['/user/city/{city}']
     doc['paths']['/user/id/{id}'] = user['/user/id/{id}']
     doc['paths']['/user/update-password'] = user['/user/update-password']
     doc['paths']['/user/recover-password'] = user['/user/recover-password']
@@ -42,26 +43,29 @@ exports.documentationService = (app) => {
     doc['paths']['/usefulcontacts/id/{id}'] = useFulContacts['/usefulcontacts/id/{id}']
 
     //friendContact
-    doc['paths']['/friendcontact'] = friendContact['/friendcontact'],
-        doc['paths']['/friendcontact/{name}'] = friendContact['/friendcontact/{name}']
+    doc['paths']['/friendcontact'] = friendContact['/friendcontact']
+    doc['paths']['/friendcontact/{name}'] = friendContact['/friendcontact/{name}']
     doc['paths']['/friendcontact/id/{id}'] = friendContact['/friendcontact/id/{id}']
     doc['paths']['/friendcontact/user/{id}'] = friendContact['/friendcontact/user/{id}']
     doc['paths']['/friendcontact/{id}'] = friendContact['/friendcontact/{id}']
 
     //complaint
     doc['paths']['/complaint'] = complaint['/complaint']
+    doc['paths']['/complaint/{id}'] = complaint['/complaint/{id}']
+    doc['paths']['/complaint/period'] = complaint['/complaint/period']
+    doc['paths']['/complaint/localization'] = complaint['/complaint/localization']
+    doc['paths']['/complaint/user/{id}'] = complaint['/complaint/user/{id}']
+    doc['paths']['/complaint/city/{city}'] = complaint['/complaint/city/{city}']
+    doc['paths']['/complaint/type/{type}'] = complaint['/complaint/type/{type}']
+    doc['paths']['/complaint/{type}/city/{city}'] = complaint['/complaint/{type}/city/{city}']
 
     //alert
     doc['paths']['/alert'] = alert['/alert']
     doc['paths']['/alert/{id}'] = alert['/alert/{id}']
-    doc['paths']['/alert/date/'] = alert['/alert/date/']
+    doc['paths']['/alert/date'] = alert['/alert/date']
     doc['paths']['/alert/id/{id}'] = alert['/alert/id/{id}']
     doc['paths']['/alert/user/{id}'] = alert['/alert/user/{id}']
     doc['paths']['/alert/city/{city}'] = alert['/alert/city/{city}']
-
-
-
-
 
     //protectiveMeasure
     doc['paths']['/protective-measure'] = protectiveMeasure['/protective-measure']

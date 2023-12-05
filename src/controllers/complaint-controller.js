@@ -1,5 +1,3 @@
-// 'user strict';
-
 const ValidaContract = require('../validators/fluent-validator');
 const repository = require('../repositories/complaint-repository');
 const guid = require('guid');
@@ -9,27 +7,128 @@ const axios = require('axios');
 const treatComplaint = require('../services/treatment-service')
 require('dotenv').config()
 
+
 exports.get = async (request, response) => {
     try {
+       const res = await repository.get();
+
+        log("", "Sucess", "complaint-controller/get", "Buscar tudo");
+        return response.status(200).send(res);
+    } catch (e) {
+
+        log("", "Error", "complaint-controller/get", "Buscar tudo: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+}
+
+exports.getByCity = async (request, response) => {
+    try {
+       const res = await repository.getByCity(request.params.city);
+
+        log("", "Sucess", "complaint-controller/getByCity", "Buscar tudo por cidade");
+        return response.status(200).send(res);
+    } catch (e) {
+
+        log("", "Error", "complaint-controller/getByCity", "Buscar tudo por cidade: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+}
+
+exports.getById = async (request, response) => {
+    try {
+        const res = await repository.getById(request.params.id);
+
+        if (res === null) return response.status(404).send({ message: "Denuncia não encontrada" });
+
+        log("", "Sucess", "complaint-controller/getById", "Buscar id");
+        return response.status(200).send(res);
+    } catch (e) {
+
+        log("", "Error", "complaint-controller/getById", "Buscar id: " + e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+
+}
+
+exports.getByType = async (request, response) => {
+    try {
+        const res = await repository.getByType(request.params.type);
+        
+        log("", "Sucess", "complaint-controller/getByType", "Buscar por tipo");
+        return response.status(200).send(res);
+
+    } catch (e) {
+        log("", "Error", "complaint-controller/getByType", "Buscar por tipo: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+
+}
+
+exports.getByTypeAndCity = async (request, response) => {
+
+    try {
+        const res = await repository.getByTypeAndCity(request.params.type, request.params.city);
+        
+        log("", "Sucess", "complaint-controller/getByTypeAndCity", "Buscar por tipo e cidade");
+        return response.status(200).send(res);
+
+    } catch (e) {
+        log("", "Error", "complaint-controller/getByTypeAndCity", "Buscar por tipo e cidade: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+
+}
+
+exports.getByLocalization = async (request, response) => {
+    try {
+        const res = await repository.getByLocalization(request.query.latitude, request.query.longitude);
+        
+        log("", "Sucess", "complaint-controller/getByLocalization", "Buscar por localizacao");
+        return response.status(200).send(res);
+
+    } catch (e) {
+        log("", "Error", "complaint-controller/getByLocalization", "Buscar por localizacao: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+}
+
+exports.getByUser = async (request, response) => {
+    try {
+        const res = await repository.getByUser(request.params.id);
+        if (res === null)  return response.status(404);
+
+        log("", "Sucess", "complaint-controller/getByUser", "Buscar por usuario");
+        return response.status(200).send(res);
+
+    } catch (e) {
+        log("", "Error", "complaint-controller/getByUser", "Buscar por usuario: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+
+}
+
+exports.getByPeriod = async (request, response) => {
+    
+    try {
         const { init, final, city } = request.query
-        const typeComplaint = request.query.type.split(',');
+        const typeComplaint = request.query.type;
         const initValid = moment(init).isValid()
         const finalValid = moment(final).isValid()
         const validCitys = ['garanhuns', 'monteiro', 'cidade n/d']
         
         if (!initValid || !finalValid || !city || !validCitys.some(validCity => validCity === city.toLowerCase())) {
-            log("", "Warning", "complaint-controller/get", `. Data Inicial: ${init} / Data final: ${final}`);
+            log("", "Warning", "complaint-controller/getByDate", `. Data Inicial: ${init} / Data final: ${final}`);
             return response.status(400).send({ message: "data ou cidade inválida" })
         }
         
-        const data = await repository.get({ init, final }, city.toLowerCase())
+        const data = await repository.getByDate({ init, final }, city.toLowerCase())
         const result = await treatComplaint.treatment({data, init, final, typeComplaint});
 
-        log("", "Sucess", "complaint-controller/get", "resgatar dados");
+        log("", "Sucess", "complaint-controller/getByDate", "Buscar por data");
         return response.status(200).send(result)
 
     } catch (e) {
-        log("", "Error", "complaint-controller/get", "resgatar dados");
+        log("", "Error", "complaint-controller/getByDate", "Buscar por data: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição.' });
     }
 }
@@ -85,7 +184,7 @@ exports.post = async (request, response) => {
             }); 
         }else{
 
-            log("", "error", "complaint-controller/post", "criar denuncia");
+            log("", "error", "complaint-controller/post", "criar denuncia ");
 
             return response.status(400).send({
                 message: 'Passe ao menos um tipo de denuncia'
@@ -93,7 +192,7 @@ exports.post = async (request, response) => {
         }
     } catch (e) {
 
-        log("", "Error", "complaint-controller/post", "criar denuncia");
+        log("", "Error", "complaint-controller/post", "criar denuncia: "+e);
         return response.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
@@ -102,13 +201,30 @@ exports.post = async (request, response) => {
 
 exports.delete = async (request, response) => {
     try {
-        await repository.delete(request.body.id);
+        if (await repository.getById(request.params.id) == null)
+         return response.status(404).send({ message: "Denuncia não encontrada" });
 
-        log("", "Sucess", "complaint-controller/delete", "remover contato");
-        return response.status(200).send({ message: 'Contato removido com sucesso!' });
+        await repository.delete(request.params.id);
+
+        log("", "Sucess", "complaint-controller/delete", "remover denuncia");
+        return response.status(200).send({ message: 'denuncia removido com sucesso!' });
     } catch (e) {
+        log("", "Error", "complaint-controller/delete", "remover denuncia: "+e);
+        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+}
 
-        log("", "Error", "complaint-controller/delete", "remover contato");
+exports.put = async (request, response) => {
+    try {
+         if (await repository.getById(request.body.id) == null)
+             return response.status(404).send({ message: "Denuncia não encontrada" });
+
+        await repository.update(request.body);
+
+        log("", "Sucess", "complaint-controller/put", "atualizar denuncia");
+        return response.status(200).send({ message: 'denuncia atualizada com sucesso!' });
+    } catch (e) {
+        log("", "Error", "complaint-controller/put", "atualizar contato: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }

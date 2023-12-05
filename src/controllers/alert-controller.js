@@ -97,8 +97,7 @@ exports.post = async (request, response) => {
             message: 'Alert criado com sucesso!'
         });
     } catch (e) {
-        console.log(e.message)
-        log("", "Error", "alert-controller/post", "criar alerta");
+        log("", "Error", "alert-controller/post", "criar alerta: "+e);
         return response.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
@@ -107,13 +106,12 @@ exports.post = async (request, response) => {
 
 exports.delete = async (request, response, next) => {
     try {
-        console.log(request.body)
-        await repository.delete(request.body.id);
+        await repository.delete(request.params.id);
         log("", "Sucess", "alert-controller/delete", "remover alert");
         return response.status(200).send({ message: 'Alert removido com sucesso!' });
     } catch (e) {
         console.log(e)
-        log("", "Error", "alert-controller/delete", "remover alert");
+        log("", "Error", "alert-controller/delete", "remover alert: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
 
     }
@@ -125,7 +123,7 @@ exports.get = async (request, response) => {
         if (data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "alerts-controller/AllAlerts", "resgatar dados");
+        log("", "Error", "alerts-controller/AllAlerts", "resgatar dados: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -137,7 +135,7 @@ exports.getById = async (request, response) => {
         if (data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "alerts-controller/getById", "resgatar dados");
+        log("", "Error", "alerts-controller/getById", "resgatar dados: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -149,7 +147,7 @@ exports.getByCity = async (request, response) => {
         if (data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "alerts-controller/getByCity", "resgatar dados");
+        log("", "Error", "alerts-controller/getByCity", "resgatar dados: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -161,14 +159,14 @@ exports.getByUserId = async (request, response) => {
         if (data === null) return response.status(404).send(data);
         return response.status(200).send(data);
     } catch (e) {
-        log("", "Error", "alerts-controller/getByUserId", "resgatar dados");
+        log("", "Error", "alerts-controller/getByUserId", "resgatar dados: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
 
 exports.getByDate = async (request, response, next) => {
     try {
-        const { init, final, city } = request.body
+        const { init, final, city } = request.query
         const initValid = moment(init).isValid()
         const finalValid = moment(final).isValid()
         const validCitys = ['garanhuns', 'monteiro', 'cidade n/d']
@@ -183,7 +181,7 @@ exports.getByDate = async (request, response, next) => {
         let result = await treatAlert.treatment({ data, init, final });
         return response.status(200).send(result);
     } catch (e) {
-        log("", "Error", "alert-controller/getByDate", "resgatar dados");
+        log("", "Error", "alert-controller/getByDate", "resgatar dados: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
@@ -207,7 +205,7 @@ exports.put = async (request, response) => {
 
     } catch (e) {
         console.log(e)
-        log("", "Error", "alert-controller/put", "Alterar alert");
+        log("", "Error", "alert-controller/put", "Alterar alert: "+e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 

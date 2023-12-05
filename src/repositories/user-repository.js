@@ -9,6 +9,10 @@ exports.get = async () => {
     return res;
 }
 
+exports.getByCity = async (city) => {
+    return await User.find({ city: { $regex: new RegExp(city, 'i') } }, '_id nickname city protection_code ');
+}
+
 exports.getById = async (id) => {
     const res = await User.findById(id, '_id nickname city protection_code ');
     return res;
