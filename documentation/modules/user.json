@@ -1,26 +1,5 @@
 {
     "/user": {
-        "get": {
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "tags": [
-                "User"
-            ],
-            "responses": {
-                "401": {
-                    "description": "Precisa de um token para autenticação"
-                },
-                "500": {
-                    "description": "Falha ao consultar users"
-                },
-                "200": {
-                    "description": "ok"
-                }
-            }
-        },
         "post": {
             "tags": [
                 "User"
@@ -87,25 +66,7 @@
             }
         }
     },
-    "/user/city/{city}": {
-        "get": {
-          "tags": [
-            "User"
-          ],
-          "operationId": "getAllUserByCity",
-          "parameters": [{"city": "id"}],
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Ok"
-            }
-          }
-        }
-    },
+  
     "/user/{name}": {
         "get": {
             "tags": [

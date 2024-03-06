@@ -30,6 +30,8 @@ const userAdmRout = require('./routes/userAdm-route');
 const alertRout = require('./routes/alert-route');
 const complaintRout = require('./routes/complaint-route');
 const friendContactRout = require('./routes/friendContact-route');
+const reportsRout = require('./routes/reports-route');
+
 
 app.use(bodyParser.json({
     limit: '5mb'
@@ -61,6 +63,7 @@ app.use('/alert', alertRout);
 app.use('/complaint', complaintRout);
 app.use('/friendcontact', friendContactRout);
 app.use('/protective-measure',protectiveMeasureRout);
+app.use('/reports', reportsRout);
 
 
 module.exports = app;

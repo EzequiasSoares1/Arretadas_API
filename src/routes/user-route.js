@@ -5,7 +5,6 @@ const router = express.Router();
 const controller = require('../controllers/user-controller');
 const authService = require('../services/auth-service');
 
-router.get('/', authService.isAdmin, controller.get);
 router.get('/city/:city', authService.isAdmin, controller.getByCity);
 router.get('/:name', controller.getByNickname);
 router.get('/id/:id', controller.getById);

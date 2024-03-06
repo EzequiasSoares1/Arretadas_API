@@ -20,7 +20,7 @@ exports.authenticate = async (data) => {
     return res;
 }
 
-exports.readAll = async () => {
+exports.get = async () => {
     const res = await UserAdm.find();
     return res;
 }

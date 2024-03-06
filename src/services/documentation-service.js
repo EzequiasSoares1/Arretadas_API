@@ -13,6 +13,8 @@ exports.documentationService = (app) => {
     const useFulContacts = require('../../documentation/modules/useFulContacts.json')
     const user = require('../../documentation/modules/user.json')
     const userAdm = require('../../documentation/modules/userAdm.json')
+    const report = require('../../documentation/modules/reports.json')
+
 
     //Login
     doc['paths']['/user/authenticate'] = auth['/authenticate']
@@ -22,10 +24,8 @@ exports.documentationService = (app) => {
     doc['paths']['/userAdm/valid-token'] = userAdm['/userAdm/valid-token']
     doc['paths']['/userAdm'] = userAdm['/userAdm']
     doc['paths']['/userAdm/{id}'] = userAdm['/userAdm/{id}']
-    doc['paths']['/userAdm/name/{name}'] = userAdm['/userAdm/name/{name}']
 
     //User
-    doc['paths']['/user'] = user['/user']
     doc['paths']['/user/{name}'] = user['/user/{name}']
     doc['paths']['/user/city/{city}'] = user['/user/city/{city}']
     doc['paths']['/user/id/{id}'] = user['/user/id/{id}']
@@ -70,5 +70,37 @@ exports.documentationService = (app) => {
     //protectiveMeasure
     doc['paths']['/protective-measure'] = protectiveMeasure['/protective-measure']
 
+    //ReportsBI
+
+        //usersAdm
+    doc['paths']['/reports/usersAdm'] = report['/reports/usersAdm'];
+    
+        //users
+    doc['paths']['/reports/users'] = report['/reports/users'];
+    doc['paths']['/reports/users/:city'] = report['/reports/users/:city'];
+    
+        //usefulcontacts
+    doc['paths']['/reports/usefulcontacts'] = report['/reports/usefulcontacts'];
+    
+        // friendcontacts
+    doc['paths']['/reports/friendcontacts'] = report['/reports/friendcontacts'];
+
+        //complaints
+    doc['paths']['/reports/complaints'] = report['/reports/complaints'];
+    doc['paths']['/reports/complaints/:id'] = report['/reports/complaints/:id'];
+    doc['paths']['/reports/complaints/user/:id'] = report['/reports/complaints/user/:id'];
+    doc['paths']['/reports/complaints/city/:city'] = report['/reports/complaints/city/:city'];
+    doc['paths']['/reports/complaints/type/:type'] = report['/reports/complaints/type/:type'];
+    doc['paths']['/reports/complaints/:type/city/:city'] = report['/reports/complaints/:type/city/:city'];
+    doc['paths']['/reports/complaints/localization'] = report['/reports/complaints/localization'];
+    doc['paths']['/reports/complaints/period'] = report['/reports/complaints/period'];
+  
+        //alerts
+    doc['paths']['/reports/alerts'] = report['/reports/alerts'];
+    doc['paths']['/reports/alerts/user/:id'] = report['/reports/alerts/user/:id'];
+    doc['paths']['/reports/alerts/id/:id'] = report['/reports/alerts/id/:id'];
+    doc['paths']['/reports/alerts/date'] = report['/reports/alerts/date'];
+    doc['paths']['/reports/alerts/city/:city'] = report['/reports/alerts/city/:city'];
+    
     app.use('/documentation', swagger.serve, swagger.setup(doc))
 }

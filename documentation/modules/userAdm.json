@@ -11,9 +11,9 @@
             "schema": {
               "type": "object",
               "example": {
-                "name": "Victor Monteiro ADM",
+                "name": "User ADM",
                 "password": "123456",
-                "city": "monteiro"
+                "city": "São Paulo"
               }
             }
           }
@@ -35,22 +35,6 @@
           "description": "Falha ao fazer o update"
         }
       }
-    },
-    "get": {
-      "tags": [
-        "User Adm"
-      ],
-      "operationId": "getAllUserAdm",
-      "responses": {
-        "200": {
-          "description": "Ok"
-        }
-      },
-      "security": [
-        {
-          "BearerAuth": []
-        }
-      ]
     }
   },
   "/userAdm/{id}": {
@@ -171,7 +155,7 @@
             "schema": {
               "type": "object",
               "example": {
-                "name": "Victor Monteiro ADM",
+                "name": "User ADM",
                 "password": "123456"
               }
             }
@@ -215,42 +199,6 @@
         },
         "401": {
           "description": "Token Inválido"
-        }
-      }
-    }
-  },
-  "/userAdm/name/{name}": {
-    "get": {
-      "tags": [
-        "User Adm"
-      ],
-      "operationId": "getUserAdmByName",
-      "parameters": [
-        {
-          "name": "name",
-          "in": "query",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Victor Monteiro ADM"
-          },
-          "description": "Nome do usuário administrador a ser buscado"
-        }
-      ],
-      "security": [
-        {
-          "BearerAuth": []
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Ok"
-        },
-        "404": {
-          "description": "Nenhum usuário encontrado com o nome fornecido"
-        },
-        "500": {
-          "description": "Falha ao buscar usuários"
         }
       }
     }

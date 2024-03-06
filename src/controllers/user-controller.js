@@ -51,18 +51,6 @@ exports.recoverQuestions = async (request, response) => {
 }
 
 
-exports.get = async (request, response) => {
-    try {
-        const data = await repository.get();
-        log("", "Sucess", "user-controller/get", "resgatar dados");
-        if (data === null) return response.status(404).send(data);
-        return response.status(200).send(data);
-    } catch (e) {
-        log("", "Error", "user-controller/get", e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-
-    }
-}
 exports.getByCity = async (request, response) => {
 
     try {
@@ -110,19 +98,6 @@ exports.getById = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
-/*exports.getByAleatoryQuestions = async (request,response) => {
-    try {
-        const data = await repository.getByAleatoryQuestions(request.params.aleatory_question)
-        log("", "Sucess", "user-controller/getByAleatoryQuestions", "resgatar dados");
-
-        return response.status(200).send(data);
-    } catch (e) {
-        log("", "Sucess", "user-controller/getByAleatoryQuestions", "resgatar dados");
-
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-}*/
-
 
 exports.post = async (request, response) => {
     let contract = new ValidationContract();
@@ -314,6 +289,7 @@ exports.refreshToken = async (request, response) => {
         }
     );
 }
+
 exports.updatePassword = async (request, response) => {
     try {
         const user = {
