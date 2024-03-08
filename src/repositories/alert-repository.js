@@ -47,3 +47,12 @@ exports.put = async (data) => {
     const res = await Alert.findByIdAndUpdate({ _id: data._id }, userRequest);
     return res;
 }
+
+exports.getByPeriod = async (city, startDate, endDate) => {
+    const alerts = await Alert.find({
+        city: city,
+        date: { $gte: startDate, $lte: endDate }
+    }).select('latitude longitude hour');
+
+    return alerts;
+};

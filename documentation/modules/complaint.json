@@ -1,7 +1,9 @@
 {
   "/complaint": {
     "post": {
-      "tags": ["Complaint"],
+      "tags": [
+        "Complaint"
+      ],
       "requestBody": {
         "content": {
           "application/json": {
@@ -12,7 +14,10 @@
                 "longitude": -36.498653188567124,
                 "date": "2021-10-26",
                 "hour": "11:00",
-                "type_complaint": ["Física", "Sexual"],
+                "type_complaint": [
+                  "Física",
+                  "Sexual"
+                ],
                 "id": "61a81b6db632390018cd9c77"
               }
             }
@@ -34,30 +39,10 @@
         }
       }
     },
-    
-    "get": {
-      "tags": ["Complaint"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "responses": {
-        "401": {
-          "description": "Precisa de um token para autenticação"
-        },
-        "500": {
-          "description": "Falha na requisição"
-        },
-        "200": {
-          "description": "ok"
-        }
-      }
-    }
-    ,
-
     "put": {
-      "tags": ["Complaint"],
+      "tags": [
+        "Complaint"
+      ],
       "security": [
         {
           "bearerAuth": []
@@ -72,7 +57,10 @@
                 "id": "61a81b6db632390018cd9c77",
                 "latitude": "-8.901668243594916",
                 "longitude": "-36.498653188567124",
-                "type": ["Física", "Sexual"]
+                "type": [
+                  "Física",
+                  "Sexual"
+                ]
               }
             }
           }
@@ -90,9 +78,10 @@
         }
       }
     },
-
     "delete": {
-      "tags": ["Complaint"],
+      "tags": [
+        "Complaint"
+      ],
       "security": [
         {
           "bearerAuth": []
@@ -125,7 +114,9 @@
   },
   "/complaint/{id}": {
     "get": {
-      "tags": ["Complaint"],
+      "tags": [
+        "Complaint"
+      ],
       "security": [
         {
           "bearerAuth": []
@@ -158,7 +149,9 @@
   },
   "/complaint/user/{id}": {
     "get": {
-      "tags": ["Complaint"],
+      "tags": [
+        "Complaint"
+      ],
       "security": [
         {
           "bearerAuth": []
@@ -188,212 +181,5 @@
         }
       }
     }
-  },
-  "/complaint/city/{city}": {
-    "get": {
-      "tags": ["Complaint"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "parameters": [
-        {
-          "in": "path",
-          "name": "city",
-          "type": "string",
-          "required": true,
-          "description": "buscar denúncias pela cidade"
-        }
-      ],
-      "responses": {
-        "401": {
-          "description": "Precisa de um token para autenticação"
-        },
-        "404": {
-          "description": "Denúncia não encontrada"
-        },
-        "500": {
-          "description": "Falha na requisição"
-        },
-        "200": {
-          "description": "ok"
-        }
-      }
-    }
-  },
-  "/complaint/type/{type}": {
-    "get": {
-      "tags": ["Complaint"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "parameters": [
-        {
-          "in": "path",
-          "name": "type",
-          "type": "string",
-          "required": true,
-          "description": "tipo da denúncia"
-        }
-      ],
-      "responses": {
-        "401": {
-          "description": "Precisa de um token para autenticação"
-        },
-        "404": {
-          "description": "Denúncia não encontrada"
-        },
-        "500": {
-          "description": "Falha na requisição"
-        },
-        "200": {
-          "description": "ok"
-        }
-      }
-    }
-  },
-  "/complaint/{type}/city/{city}": {
-    "get": {
-        "tags": ["Complaint"],
-        "security": [
-            {
-                "bearerAuth": []
-            }
-        ],
-        "description": "Este endpoint retorna as denúncias com base no tipo e na cidade.",
-        "parameters": [
-            {
-                "in": "path",
-                "name": "type",
-                "type": "string",
-                "required": true,
-                "description": "Tipo da denúncia."
-            },
-            {
-                "in": "path",
-                "name": "city",
-                "type": "string",
-                "required": true,
-                "description": "Nome da cidade."
-            }
-        ],
-        "responses": {
-            "401": {
-                "description": "Precisa de um token para autenticação."
-            },
-            "404": {
-                "description": "Denúncia não encontrada."
-            },
-            "500": {
-                "description": "Falha na requisição."
-            },
-            "200": {
-                "description": "OK. Retorna as denúncias por tipo e cidade."
-            }
-        }
-    }
-  },
-  "/complaint/localization": {
-    "get": {
-        "tags": ["Complaint"],
-        "security": [
-            {
-                "bearerAuth": []
-            }
-        ],
-        "description": "Este endpoint retorna as denúncias com base na localização (latitude e longitude).",
-        "parameters": [
-            {
-                "in": "query",
-                "name": "latitude",
-                "type": "string",
-                "required": true,
-                "description": "Latitude da localização."
-            },
-            {
-                "in": "query",
-                "name": "longitude",
-                "type": "string",
-                "required": true,
-                "description": "Longitude da localização."
-            }
-        ],
-        "responses": {
-            "401": {
-                "description": "Precisa de um token para autenticação."
-            },
-            "404": {
-                "description": "Denúncia não encontrada."
-            },
-            "500": {
-                "description": "Falha na requisição."
-            },
-            "200": {
-                "description": "OK. Retorna as denúncias por localização."
-            }
-        }
-    }
-},
-  "/complaint/period":{
-    "get": {
-      "security": [
-          {
-              "bearerAuth": []
-          }
-      ],
-      "tags": [
-          "Complaint"
-      ],
-      "parameters": [
-          {
-              "in": "query",
-              "name": "init",
-              "type": "Date",
-              "description": "Data inicio para buscar denuncias em um intervalo de tempo. (ano - mês - dia)",
-              "required": true
-          },
-          {
-              "in": "query",
-              "name": "final",
-              "type": "Date",
-              "description": "Data final para buscar denuncias em um intervalo de tempo (ano - mês - dia)",
-              "required": true
-          },
-          {
-            "in": "query",
-            "name": "city",
-            "type": "String",
-            "description": "Cidade ",
-            "required": true
-          },
-          {
-              "in": "query",
-              "name": "type",
-              "type": "String",
-              "description": "Tipo de denuncia separado por vírgula (all, Sexual, Moral, Verbal, Física, Psicológica. Patrimonial)",
-              "required": true
-          }
-      ],
-      "responses": {
-          "401": {
-              "description": "Precisa de um token para autenticação"
-          },
-          "400": {
-              "description": "data inicial e/ou final inválida"
-          },
-          "500": {
-              "description": "Falha na requisição"
-          },
-          "200": {
-              "description": "ok"
-          }
-      }
-    }
   }
 }
-
-
-

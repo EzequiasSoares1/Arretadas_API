@@ -8,32 +8,6 @@ const treatComplaint = require('../services/treatment-service')
 require('dotenv').config()
 
 
-exports.get = async (request, response) => {
-    try {
-       const res = await repository.get();
-
-        log("", "Sucess", "complaint-controller/get", "Buscar tudo");
-        return response.status(200).send(res);
-    } catch (e) {
-
-        log("", "Error", "complaint-controller/get", "Buscar tudo: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-}
-
-exports.getByCity = async (request, response) => {
-    try {
-       const res = await repository.getByCity(request.params.city);
-
-        log("", "Sucess", "complaint-controller/getByCity", "Buscar tudo por cidade");
-        return response.status(200).send(res);
-    } catch (e) {
-
-        log("", "Error", "complaint-controller/getByCity", "Buscar tudo por cidade: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-}
-
 exports.getById = async (request, response) => {
     try {
         const res = await repository.getById(request.params.id);
@@ -50,48 +24,6 @@ exports.getById = async (request, response) => {
 
 }
 
-exports.getByType = async (request, response) => {
-    try {
-        const res = await repository.getByType(request.params.type);
-        
-        log("", "Sucess", "complaint-controller/getByType", "Buscar por tipo");
-        return response.status(200).send(res);
-
-    } catch (e) {
-        log("", "Error", "complaint-controller/getByType", "Buscar por tipo: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-
-}
-
-exports.getByTypeAndCity = async (request, response) => {
-
-    try {
-        const res = await repository.getByTypeAndCity(request.params.type, request.params.city);
-        
-        log("", "Sucess", "complaint-controller/getByTypeAndCity", "Buscar por tipo e cidade");
-        return response.status(200).send(res);
-
-    } catch (e) {
-        log("", "Error", "complaint-controller/getByTypeAndCity", "Buscar por tipo e cidade: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-
-}
-
-exports.getByLocalization = async (request, response) => {
-    try {
-        const res = await repository.getByLocalization(request.query.latitude, request.query.longitude);
-        
-        log("", "Sucess", "complaint-controller/getByLocalization", "Buscar por localizacao");
-        return response.status(200).send(res);
-
-    } catch (e) {
-        log("", "Error", "complaint-controller/getByLocalization", "Buscar por localizacao: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-}
-
 exports.getByUser = async (request, response) => {
     try {
         const res = await repository.getByUser(request.params.id);
@@ -105,32 +37,6 @@ exports.getByUser = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 
-}
-
-exports.getByPeriod = async (request, response) => {
-    
-    try {
-        const { init, final, city } = request.query
-        const typeComplaint = request.query.type;
-        const initValid = moment(init).isValid()
-        const finalValid = moment(final).isValid()
-        const validCitys = ['garanhuns', 'monteiro', 'cidade n/d']
-        
-        if (!initValid || !finalValid || !city || !validCitys.some(validCity => validCity === city.toLowerCase())) {
-            log("", "Warning", "complaint-controller/getByDate", `. Data Inicial: ${init} / Data final: ${final}`);
-            return response.status(400).send({ message: "data ou cidade inválida" })
-        }
-        
-        const data = await repository.getByDate({ init, final }, city.toLowerCase())
-        const result = await treatComplaint.treatment({data, init, final, typeComplaint});
-
-        log("", "Sucess", "complaint-controller/getByDate", "Buscar por data");
-        return response.status(200).send(result)
-
-    } catch (e) {
-        log("", "Error", "complaint-controller/getByDate", "Buscar por data: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição.' });
-    }
 }
 
 exports.post = async (request, response) => {

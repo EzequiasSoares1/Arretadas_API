@@ -52,55 +52,45 @@ exports.documentationService = (app) => {
     //complaint
     doc['paths']['/complaint'] = complaint['/complaint']
     doc['paths']['/complaint/{id}'] = complaint['/complaint/{id}']
-    doc['paths']['/complaint/period'] = complaint['/complaint/period']
-    doc['paths']['/complaint/localization'] = complaint['/complaint/localization']
     doc['paths']['/complaint/user/{id}'] = complaint['/complaint/user/{id}']
-    doc['paths']['/complaint/city/{city}'] = complaint['/complaint/city/{city}']
-    doc['paths']['/complaint/type/{type}'] = complaint['/complaint/type/{type}']
-    doc['paths']['/complaint/{type}/city/{city}'] = complaint['/complaint/{type}/city/{city}']
+
 
     //alert
     doc['paths']['/alert'] = alert['/alert']
     doc['paths']['/alert/{id}'] = alert['/alert/{id}']
-    doc['paths']['/alert/date'] = alert['/alert/date']
     doc['paths']['/alert/id/{id}'] = alert['/alert/id/{id}']
     doc['paths']['/alert/user/{id}'] = alert['/alert/user/{id}']
-    doc['paths']['/alert/city/{city}'] = alert['/alert/city/{city}']
+
 
     //protectiveMeasure
     doc['paths']['/protective-measure'] = protectiveMeasure['/protective-measure']
 
     //ReportsBI
 
-        //usersAdm
+    //usersAdm
     doc['paths']['/reports/usersAdm'] = report['/reports/usersAdm'];
-    
-        //users
+
+    //users
     doc['paths']['/reports/users'] = report['/reports/users'];
     doc['paths']['/reports/users/:city'] = report['/reports/users/:city'];
-    
-        //usefulcontacts
+
+    //usefulcontacts
     doc['paths']['/reports/usefulcontacts'] = report['/reports/usefulcontacts'];
-    
-        // friendcontacts
+
+    // friendcontacts
     doc['paths']['/reports/friendcontacts'] = report['/reports/friendcontacts'];
 
-        //complaints
+    //complaints
     doc['paths']['/reports/complaints'] = report['/reports/complaints'];
-    doc['paths']['/reports/complaints/:id'] = report['/reports/complaints/:id'];
-    doc['paths']['/reports/complaints/user/:id'] = report['/reports/complaints/user/:id'];
-    doc['paths']['/reports/complaints/city/:city'] = report['/reports/complaints/city/:city'];
-    doc['paths']['/reports/complaints/type/:type'] = report['/reports/complaints/type/:type'];
-    doc['paths']['/reports/complaints/:type/city/:city'] = report['/reports/complaints/:type/city/:city'];
+    doc['paths']['/reports/complaints/city/{city}'] = report['/reports/complaints/city/{city}'];
+    doc['paths']['/reports/complaints/{type}/city/{city}'] = report['/reports/complaints/{type}/city/{city}'];
     doc['paths']['/reports/complaints/localization'] = report['/reports/complaints/localization'];
     doc['paths']['/reports/complaints/period'] = report['/reports/complaints/period'];
-  
-        //alerts
+
+    //alerts
     doc['paths']['/reports/alerts'] = report['/reports/alerts'];
-    doc['paths']['/reports/alerts/user/:id'] = report['/reports/alerts/user/:id'];
-    doc['paths']['/reports/alerts/id/:id'] = report['/reports/alerts/id/:id'];
-    doc['paths']['/reports/alerts/date'] = report['/reports/alerts/date'];
-    doc['paths']['/reports/alerts/city/:city'] = report['/reports/alerts/city/:city'];
-    
+    doc['paths']['/reports/alerts/period'] = report['/reports/alerts/period'];
+    doc['paths']['/reports/alerts/city/{city}'] = report['/reports/alerts/city/{city}'];
+
     app.use('/documentation', swagger.serve, swagger.setup(doc))
 }

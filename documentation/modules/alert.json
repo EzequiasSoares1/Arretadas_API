@@ -1,24 +1,5 @@
 {
     "/alert": {
-        "get": {
-            "tags": [
-                "Alerts"
-            ],
-            "operationId": "getAllAlerts",
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "responses": {
-                "401": {
-                    "description": "Precisa de um token para autenticação"
-                },
-                "200": {
-                    "description": "ok"
-                }
-            }
-        },
         "post": {
             "tags": [
                 "Alerts"
@@ -183,84 +164,6 @@
                 },
                 "500": {
                     "description": "Falha ao buscar alert - ID de usuário inválido"
-                },
-                "200": {
-                    "description": "ok"
-                }
-            }
-        }
-    },
-    "/alert/city/{city}": {
-        "get": {
-            "tags": [
-                "Alerts"
-            ],
-            "parameters": [
-                {
-                    "in": "path",
-                    "name": "city",
-                    "type": "string",
-                    "description": "Nome da cidade",
-                    "required": true
-                }
-            ],
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "responses": {
-                "401": {
-                    "description": "Precisa de um token para autenticação"
-                },
-                "500": {
-                    "description": "Falha ao buscar alert - Cidade inválida"
-                },
-                "200": {
-                    "description": "ok"
-                }
-            }
-        }
-    },
-    "/alert/date": {
-        "get": {
-            "tags": [
-                "Alerts"
-            ],
-            "parameters": [
-                {
-                    "in": "query",
-                    "name": "init",
-                    "type": "Date",
-                    "description": "Data inicio para buscar alerts em um intervalo de tempo (ano - mês - dia)",
-                    "required": true
-                },
-                {
-                    "in": "query",
-                    "name": "final",
-                    "type": "Date",
-                    "description": "Data final para buscar alerts em um intervalo de tempo (ano - mês - dia)",
-                    "required": true
-                },
-                {
-                    "in": "query",
-                    "name": "city",
-                    "type": "String",
-                    "description": "Digite o nome da cidade",
-                    "required": true
-                }
-            ],
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "responses": {
-                "401": {
-                    "description": "Precisa de um token para autenticação"
-                },
-                "500": {
-                    "description": "Informe uma data de inicio e uma data de fim"
                 },
                 "200": {
                     "description": "ok"

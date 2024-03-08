@@ -210,3 +210,17 @@ exports.put = async (request, response) => {
     }
 
 }
+exports.gert = async (city, startDate, endDate) => {
+    try {
+        // Consultar o banco de dados para obter os alertas no período e na cidade especificados
+        const alerts = await Alert.find({
+            city: city,
+            date: { $gte: startDate, $lte: endDate }
+        }).select('latitude longitude hour');
+
+        return alerts;
+    } catch (error) {
+        throw new Error('Erro ao obter os alertas por período e cidade: ' + error.message);
+    }
+    
+};
