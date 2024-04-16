@@ -48,9 +48,8 @@ exports.put = async (data) => {
     return res;
 }
 
-exports.getByPeriod = async (city, startDate, endDate) => {
+exports.getByPeriod = async (startDate, endDate) => {
     const alerts = await Alert.find({
-        city: city,
         date: { $gte: startDate, $lte: endDate }
     }).select('latitude longitude hour');
 

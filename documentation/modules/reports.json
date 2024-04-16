@@ -548,15 +548,6 @@
            
             "parameters": [
                 {
-                    "name": "city",
-                    "in": "query",
-                    "required": true,
-                    "description": "Nome da cidade",
-                    "schema": {
-                        "type": "string"
-                    }
-                },
-                {
                     "name": "startDate",
                     "in": "query",
                     "required": true,

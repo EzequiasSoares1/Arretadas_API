@@ -85,3 +85,11 @@ exports.getByDateAndCity = async (initialDate, finalDate, city) => {
         throw new Error(`Erro ao buscar denúncias por data e cidade: ${error.message}`);
     }
 };
+
+exports.getByPeriod = async (startDate, endDate) => {
+    const complaints = await Complaint.find({
+        date: { $gte: startDate, $lte: endDate }
+    }).select('latitude longitude hour');
+
+    return complaints;
+};

@@ -365,12 +365,11 @@ exports.alerts = async (request, response) => {
 
 exports.alertsPeriod = async (request, response) => {
     try {
-        const { city, startDate, endDate } = request.query;
+        const {startDate, endDate } = request.query;
 
         const start = new Date(startDate);
         const end = new Date(endDate);
-
-        const data = await alerts.getByPeriod(city, start, end);
+        const data = await alerts.getByPeriod(start, end);
 
         if (!data || data.length === 0) {
             return response.status(404).send({ message: 'Nenhum dado encontrado' });
