@@ -4,9 +4,8 @@ const users = require('../repositories/user-repository');
 const usersAdm = require('../repositories/userAdm-repository');
 const alerts = require('../repositories/alert-repository');
 const complaints = require('../repositories/complaint-repository');
-const friendContactys = require('../repositories/friendContact-repository');
-const usefulcontacts = require('../repositories/usefulcontacts-repository');
-const log = require('../services/log-service')
+const log = require('../services/log-service');
+const byLocalizatio = require('../services/geocoding-service')
 
 
 exports.usersAdm = async (request, response) => {
@@ -34,7 +33,6 @@ exports.usersAll = async (request, response) => {
             acc[user.city] = (acc[user.city] || 0) + 1;
             return acc;
         }, {});
-
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
         return response.json({ amountUsers, usersByCity });
     } catch (error) {
@@ -114,10 +112,16 @@ exports.complaintsCity = async (request, response) => {
             }
         });
 
-        const locationsAndTimes = Object.entries(locationsAndTimesMap).map(([location, data]) => ({
-            location: location.split(','),
-            times: Array.from(new Set(data.times)), 
-            occurrences: data.occurrences
+        const locationsAndTimes = await Promise.all(Object.entries(locationsAndTimesMap).map(async ([location, data]) => {
+            const [latitude, longitude] = location.split(',');
+            const { Rua, Bairro } = await byLocalizatio(latitude, longitude);
+            return {
+                Rua,
+                Bairro,
+                location: location.split(','),
+                times: Array.from(new Set(data.times)),
+                occurrences: data.occurrences
+            };
         }));
 
         const summary = {
@@ -133,6 +137,7 @@ exports.complaintsCity = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
+
 exports.complaintsTypeAndCity = async (request, response) => {
     try {
         const type = request.params.type;
@@ -360,11 +365,12 @@ exports.alerts = async (request, response) => {
 
 exports.alertsPeriod = async (request, response) => {
     try {
-        const {startDate, endDate } = request.query;
+        const { city, startDate, endDate } = request.query;
 
         const start = new Date(startDate);
         const end = new Date(endDate);
-        const data = await alerts.getByPeriod(start, end);
+
+        const data = await alerts.getByPeriod(city, start, end);
 
         if (!data || data.length === 0) {
             return response.status(404).send({ message: 'Nenhum dado encontrado' });

@@ -134,4 +134,3 @@ exports.put = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
-
