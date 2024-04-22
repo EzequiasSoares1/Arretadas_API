@@ -88,13 +88,13 @@
             "tags": [
                 "Reports"
             ],
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
             "summary": "Obter todas as denúncias",
             "operationId": "Complaints",
+            "security": [
+                {
+                    "BearerAuth": []
+                }
+            ],
             "responses": {
                 "200": {
                     "description": "Operação bem-sucedida",
@@ -128,9 +128,6 @@
                             }
                         }
                     }
-                },
-                "401": {
-                    "description": "Token inválido"
                 }
             }
         }
@@ -140,12 +137,12 @@
             "tags": [
                 "Reports"
             ],
+            "summary": "Obter resumo das denúncias por cidade",
             "security": [
                 {
-                    "bearerAuth": []
+                    "BearerAuth": []
                 }
             ],
-            "summary": "Obter resumo das denúncias por cidade",
             "parameters": [
                 {
                     "name": "city",
@@ -212,12 +209,12 @@
             "tags": [
                 "Reports"
             ],
+            "summary": "Obter denúncias por tipo e cidade",
             "security": [
                 {
-                    "bearerAuth": []
+                    "BearerAuth": []
                 }
             ],
-            "summary": "Obter denúncias por tipo e cidade",
             "operationId": "GetComplaintsByTypeAndCity",
             "parameters": [
                 {
@@ -290,12 +287,12 @@
             "tags": [
                 "Reports"
             ],
+            "summary": "Obter denúncias por localização",
             "security": [
                 {
-                    "bearerAuth": []
+                    "BearerAuth": []
                 }
             ],
-            "summary": "Obter denúncias por localização",
             "operationId": "getComplaintsLocalization",
             "parameters": [
                 {
@@ -366,14 +363,13 @@
         "get": {
             "tags": [
                 "Reports"
-            ], 
-            "security": [
-                {
-                    "bearerAuth": []
-                }
             ],
             "summary": "Obter denúncias por período",
-           
+            "security": [
+                {
+                    "BearerAuth": []
+                }
+            ],
             "parameters": [
                 {
                     "name": "startDate",
@@ -464,12 +460,12 @@
             "tags": [
                 "Reports"
             ],
+            "summary": "Obter todos os alertas",
             "security": [
                 {
-                    "bearerAuth": []
+                    "BearerAuth": []
                 }
             ],
-            "summary": "Obter todos os alertas",
             "responses": {
                 "200": {
                     "description": "Operação bem-sucedida",
@@ -539,13 +535,12 @@
             "tags": [
                 "Reports"
             ],
+            "summary": "Obter alertas por período",
             "security": [
                 {
-                    "bearerAuth": []
+                    "BearerAuth": []
                 }
             ],
-            "summary": "Obter alertas por período",
-           
             "parameters": [
                 {
                     "name": "startDate",
@@ -623,13 +618,12 @@
             "tags": [
                 "Reports"
             ],
+            "summary": "Obter alertas por cidade",
             "security": [
                 {
-                    "bearerAuth": []
+                    "BearerAuth": []
                 }
             ],
-            "summary": "Obter alertas por cidade",
-            
             "parameters": [
                 {
                     "name": "city",

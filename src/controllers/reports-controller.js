@@ -4,8 +4,9 @@ const users = require('../repositories/user-repository');
 const usersAdm = require('../repositories/userAdm-repository');
 const alerts = require('../repositories/alert-repository');
 const complaints = require('../repositories/complaint-repository');
-const log = require('../services/log-service');
-const byLocalizatio = require('../services/geocoding-service')
+const friendContactys = require('../repositories/friendContact-repository');
+const usefulcontacts = require('../repositories/usefulcontacts-repository');
+const log = require('../services/log-service')
 
 
 exports.usersAdm = async (request, response) => {
@@ -33,6 +34,7 @@ exports.usersAll = async (request, response) => {
             acc[user.city] = (acc[user.city] || 0) + 1;
             return acc;
         }, {});
+
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
         return response.json({ amountUsers, usersByCity });
     } catch (error) {
@@ -112,16 +114,10 @@ exports.complaintsCity = async (request, response) => {
             }
         });
 
-        const locationsAndTimes = await Promise.all(Object.entries(locationsAndTimesMap).map(async ([location, data]) => {
-            const [latitude, longitude] = location.split(',');
-            const { Rua, Bairro } = await byLocalizatio(latitude, longitude);
-            return {
-                Rua,
-                Bairro,
-                location: location.split(','),
-                times: Array.from(new Set(data.times)),
-                occurrences: data.occurrences
-            };
+        const locationsAndTimes = Object.entries(locationsAndTimesMap).map(([location, data]) => ({
+            location: location.split(','),
+            times: Array.from(new Set(data.times)), 
+            occurrences: data.occurrences
         }));
 
         const summary = {
@@ -137,7 +133,6 @@ exports.complaintsCity = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
-
 exports.complaintsTypeAndCity = async (request, response) => {
     try {
         const type = request.params.type;
