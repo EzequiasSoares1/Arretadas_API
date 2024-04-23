@@ -72,7 +72,7 @@ exports.documentationService = (app) => {
 
     //users
     doc['paths']['/reports/users'] = report['/reports/users'];
-    doc['paths']['/reports/users/:city'] = report['/reports/users/:city'];
+    doc['paths']['/reports/users/{city}'] = report['/reports/users/{city}'];
 
     //usefulcontacts
     doc['paths']['/reports/usefulcontacts'] = report['/reports/usefulcontacts'];

@@ -5,7 +5,7 @@ const usersAdm = require('../repositories/userAdm-repository');
 const alerts = require('../repositories/alert-repository');
 const complaints = require('../repositories/complaint-repository');
 const log = require('../services/log-service');
-const byLocalizatio = require('../services/geocoding-service')
+const byLocalization = require('../services/geocoding-service')
 
 
 exports.usersAdm = async (request, response) => {
@@ -35,6 +35,19 @@ exports.usersAll = async (request, response) => {
         }, {});
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
         return response.json({ amountUsers, usersByCity });
+    } catch (error) {
+        console.error('Error:', error);
+        return response.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.usersAllByCity = async (request, response) => {
+    try {
+        const allUsers = await users.getByCity(request.params.city);
+        const amountUsers = allUsers.length;
+       
+        log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
+        return response.json({amountUsers});
     } catch (error) {
         console.error('Error:', error);
         return response.status(500).json({ message: 'Internal Server Error' });
@@ -82,7 +95,6 @@ exports.complaints = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
-
 exports.complaintsCity = async (request, response) => {
     try {
         const city = request.params.city;
@@ -105,38 +117,41 @@ exports.complaintsCity = async (request, response) => {
         complaintsByCity.forEach(complaint => {
             const locationKey = `${complaint.latitude},${complaint.longitude}`;
             if (!locationsAndTimesMap[locationKey]) {
-                locationsAndTimesMap[locationKey] = { times: [complaint.hour], occurrences: 1 };
+                locationsAndTimesMap[locationKey] = { times: [complaint.hour], dates: [complaint.date], occurrences: 1 };
             } else {
                 locationsAndTimesMap[locationKey].times.push(complaint.hour);
+                locationsAndTimesMap[locationKey].dates.push(complaint.date);
                 locationsAndTimesMap[locationKey].occurrences++;
             }
         });
 
         const locationsAndTimes = await Promise.all(Object.entries(locationsAndTimesMap).map(async ([location, data]) => {
             const [latitude, longitude] = location.split(',');
-            const { Rua, Bairro } = await byLocalizatio(latitude, longitude);
+            const { Rua, Bairro } = await byLocalization(latitude, longitude);
             return {
                 Rua,
                 Bairro,
                 location: location.split(','),
                 times: Array.from(new Set(data.times)),
+                dates: Array.from(new Set(data.dates)),
                 occurrences: data.occurrences
             };
         }));
 
         const summary = {
-            amountComplaintsByCity: amountComplaintsByCity,
+            amountComplaintsByCity,
             complaintsByType: amountByType,
-            locationsAndTimes: locationsAndTimes
+            locationsAndTimes
         };
 
-        log("", "Sucess", "complaint-controller/complaintsCity", "Buscar resumo por cidade");
+        log("", "Success", "complaint-controller/complaintsCity", "Buscar resumo por cidade");
         return response.status(200).send(summary);
     } catch (e) {
         log("", "Error", "complaint-controller/ComplaintsCity", "Buscar resumo por cidade: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
+
 
 exports.complaintsTypeAndCity = async (request, response) => {
     try {
@@ -414,12 +429,10 @@ exports.alertsPeriod = async (request, response) => {
 exports.alertsCity = async (request, response) => {
     try {
         const { city } = request.query;
-
         const data = await alerts.getByCity(city);
+        const amountAlertByCity = data.length;
 
-        if (!data || data.length === 0) {
-            return response.status(404).send({ message: 'Nenhum dado encontrado' });
-        }
+       
 
         const responseData = {};
 
@@ -445,13 +458,30 @@ exports.alertsCity = async (request, response) => {
             }
         });
 
-        const locations = Object.values(responseData);
+        // Obtendo os dados de localização (rua e bairro) para cada localização
+        const locations = await Promise.all(Object.values(responseData).map(async (item) => {
+            const { latitude, longitude } = item.location;
+            console.log(latitude, longitude)
+            const rua = await byLocalization(latitude, longitude);
+            return {
+                ...item,
+                location: {
+                    ...item.location,
+                    Rua,
+                    Bairro
+                }
+            };
+        }));
+
+        const resume = {
+            amountAlertByCity: amountAlertByCity,
+            information: locations
+        };
 
         log("", "Success", "alerts-controller/alertsCity", "Dados de alerta por cidade recuperados com sucesso");
-        return response.status(200).send(locations);
+        return response.status(200).send(resume);
     } catch (e) {
         log("", "Error", "alerts-controller/alertsCity", "Erro ao processar dados de alerta por cidade: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 };
-
