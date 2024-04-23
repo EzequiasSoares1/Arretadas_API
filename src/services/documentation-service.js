@@ -83,8 +83,6 @@ exports.documentationService = (app) => {
     //complaints
     doc['paths']['/reports/complaints'] = report['/reports/complaints'];
     doc['paths']['/reports/complaints/city/{city}'] = report['/reports/complaints/city/{city}'];
-    doc['paths']['/reports/complaints/{type}/city/{city}'] = report['/reports/complaints/{type}/city/{city}'];
-    doc['paths']['/reports/complaints/localization'] = report['/reports/complaints/localization'];
     doc['paths']['/reports/complaints/period'] = report['/reports/complaints/period'];
 
     //alerts

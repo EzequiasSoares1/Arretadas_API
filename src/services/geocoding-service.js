@@ -11,11 +11,10 @@ module.exports = async function buscarLocalizaçãp(latitude, longitude) {
             const Rua = data.results[0].address_components.find(component => component.types.includes('route')).long_name;
             const Bairro = data.results[0].address_components.find(component => component.types.includes('sublocality')).long_name;
             return { Rua, Bairro };
-        } else {
-            throw new Error('Geocoding API request failed');
-        }
+        } 
+            
     } catch (error) {
-        throw new Error(`Error getting locality: ${error.message}`);
+        log('Geocoding API request failed:', error.message);
     }
 }
 

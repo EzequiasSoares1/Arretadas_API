@@ -45,15 +45,14 @@ exports.usersAllByCity = async (request, response) => {
     try {
         const allUsers = await users.getByCity(request.params.city);
         const amountUsers = allUsers.length;
-       
+
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
-        return response.json({amountUsers});
+        return response.json({ amountUsers });
     } catch (error) {
         console.error('Error:', error);
         return response.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
 
 exports.complaints = async (request, response) => {
     try {
@@ -95,6 +94,7 @@ exports.complaints = async (request, response) => {
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
+
 exports.complaintsCity = async (request, response) => {
     try {
         const city = request.params.city;
@@ -127,12 +127,12 @@ exports.complaintsCity = async (request, response) => {
 
         const locationsAndTimes = await Promise.all(Object.entries(locationsAndTimesMap).map(async ([location, data]) => {
             const [latitude, longitude] = location.split(',');
-            const { Rua, Bairro } = await byLocalization(latitude, longitude);
+            const address = await byLocalization(latitude, longitude);
             return {
-                Rua,
-                Bairro,
+                Rua: address === undefined ? "Não Localizado" : address.Rua,
+                Bairro: address === undefined ? "Não Localizado" : address.Bairro,
                 location: location.split(','),
-                times: Array.from(new Set(data.times)),
+                hours: Array.from(new Set(data.times)),
                 dates: Array.from(new Set(data.dates)),
                 occurrences: data.occurrences
             };
@@ -152,173 +152,29 @@ exports.complaintsCity = async (request, response) => {
     }
 }
 
-
-exports.complaintsTypeAndCity = async (request, response) => {
-    try {
-        const type = request.params.type;
-        const city = request.params.city;
-
-        const complaint = await complaints.getByTypeAndCity(type, city);
-
-        const locationsAndTimesMap = {};
-
-        complaint.forEach(complaint => {
-            const locationKey = `${complaint.latitude},${complaint.longitude}`;
-            if (!locationsAndTimesMap[locationKey]) {
-                locationsAndTimesMap[locationKey] = { times: [complaint.date + ' ' + complaint.hour], occurrences: 1 };
-            } else {
-                locationsAndTimesMap[locationKey].times.push(complaint.date + ' ' + complaint.hour);
-                locationsAndTimesMap[locationKey].occurrences++;
-            }
-        });
-
-        const locationsAndTimes = Object.entries(locationsAndTimesMap).map(([location, data]) => ({
-            location: location.split(','),
-            times: Array.from(new Set(data.times)), 
-            occurrences: data.occurrences
-        }));
-
-        const responseObj = {
-            locationsAndTimes: locationsAndTimes
-        };
-
-        log("", "Success", "complaint-controller/complaintsTypeAndCity", "Buscar por tipo e cidade");
-        return response.status(200).send(responseObj);
-    } catch (e) {
-        log("", "Error", "complaint-controller/complaintsTypeAndCity", "Buscar por tipo e cidade: " + e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-}
-
-exports.complaintsLocalization = async (request, response) => {
-    try {
-        const complaint = await complaints.getByLocalization(request.query.latitude, request.query.longitude);
-        
-        const complaintsByType = {};
-        const uniqueDates = new Set();
-        const intervals = {};
-
-        complaint.forEach(complaint => {
-            complaint.type_complaint.forEach(type => {
-                if (complaintsByType[type]) {
-                    complaintsByType[type]++;
-                } else {
-                    complaintsByType[type] = 1;
-                }
-            });
-
-            const date = new Date(complaint.date);
-            const formattedDate = date.toISOString().split('T')[0];
-            uniqueDates.add(formattedDate);
-
-            const hour = complaint.hour.split(':')[0];
-            const interval = `${hour}:00-${hour}:59`;
-            if (intervals[interval]) {
-                intervals[interval]++;
-            } else {
-                intervals[interval] = 1;
-            }
-        });
-
-        const totalComplaints = complaint.length;
-
-        const responseObj = {
-            totalComplaints: totalComplaints,
-            complaintsByType: complaintsByType,
-            uniqueDates: Array.from(uniqueDates),
-            intervals: intervals
-        };
-
-        log("", "Success", "complaint-controller/complaintsLocalization", "Buscar por localizacao");
-        return response.status(200).send(responseObj);
-
-    } catch (e) {
-        log("", "Error", "complaint-controller/complaintsLocalization", "Buscar por localizacao: "+e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
-    }
-}
-
-
 exports.complaintsPeriod = async (request, response) => {
-    
+
     try {
         const { init, final, city } = request.query
         const typeComplaint = request.query.type;
         const initValid = moment(init).isValid()
         const finalValid = moment(final).isValid()
         const validCitys = ['garanhuns', 'monteiro', 'cidade n/d']
-        
+
         if (!initValid || !finalValid || !city || !validCitys.some(validCity => validCity === city.toLowerCase())) {
             log("", "Warning", "complaint-controller/getByDate", `. Data Inicial: ${init} / Data final: ${final}`);
             return response.status(400).send({ message: "data ou cidade inválida" })
         }
-        
+
         const data = await repository.getByDate({ init, final }, city.toLowerCase())
-        const result = await treatComplaint.treatment({data, init, final, typeComplaint});
+        const result = await treatComplaint.treatment({ data, init, final, typeComplaint });
 
         log("", "Sucess", "complaint-controller/complaintsPeriod", "Buscar por data");
         return response.status(200).send(result)
 
     } catch (e) {
-        log("", "Error", "complaint-controller/complaintsPeriod", "Buscar por data: "+e);
+        log("", "Error", "complaint-controller/complaintsPeriod", "Buscar por data: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição.' });
-    }
-}
-
-exports.complaintsPeriod = async (request, response) => {
-    try {
-        const startDate = new Date(request.query.startDate);
-        const endDate = new Date(request.query.endDate);
-        const city = request.query.city;
-
-        const complaint = await complaints.getByDateAndCity(startDate, endDate, city);
-        
-        const totalComplaints = complaint.length;
-
-        const complaintsByType = {};
-        const uniqueLocations = {};  
-        const intervals = {};
-
-        complaint.forEach(complaint => {
-            complaint.type_complaint.forEach(type => {
-                if (complaintsByType[type]) {
-                    complaintsByType[type]++;
-                } else {
-                    complaintsByType[type] = 1;
-                }
-            });
-
-            const hour = complaint.hour.split(':')[0];
-            const interval = `${hour}:00-${hour}:59`;
-            if (intervals[interval]) {
-                intervals[interval]++;
-            } else {
-                intervals[interval] = 1;
-            }
-
-            const location = `${complaint.latitude},${complaint.longitude}`;
-            if (!uniqueLocations[location]) {
-                uniqueLocations[location] = {};
-            }
-            if (!uniqueLocations[location][interval]) {
-                uniqueLocations[location][interval] = 1;
-            } else {
-                uniqueLocations[location][interval]++;
-            }
-        });
-
-        const responseObj = {
-            totalComplaints: totalComplaints,
-            complaintsByType: complaintsByType,
-            uniqueLocations: uniqueLocations
-        };
-
-        log("", "Success", "complaint-controller/complaintsPeriod", "Buscar por data e cidade");
-        return response.status(200).send(responseObj);
-
-    } catch (e) {
-        log("", "Error", "complaint-controller/complaintsPeriod", "Buscar por data e cidade: " + e);
-        return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
 }
 
@@ -430,21 +286,26 @@ exports.alertsCity = async (request, response) => {
     try {
         const { city } = request.query;
         const data = await alerts.getByCity(city);
-        const amountAlertByCity = data.length;
 
-       
+        const amountAlertByCity = data.length;
+        console.log(data)
 
         const responseData = {};
 
-        data.forEach(alert => {
-            const { latitude, longitude, date, hour } = alert;
+        for (const alert of data) {
+            const { latitude, longitude, date, hour, user } = alert;
+            const address = await byLocalization(latitude, longitude);
+            const victim = await users.getById(user);
             const key = `${latitude},${longitude}`;
 
             if (!responseData[key]) {
                 responseData[key] = {
+                    medidaProtetiva: victim.protection_code === undefined || null ? "Sem Medida Protetiva" : victim.protection_code,
                     location: {
                         latitude: latitude,
-                        longitude: longitude
+                        longitude: longitude,
+                        Rua: address === undefined ? "Não Localizado" : address.Rua,
+                        Bairro: address === undefined ? "Não Localizado" : address.Bairro
                     },
                     dates: [{ date: date, hours: [hour] }]
                 };
@@ -456,22 +317,9 @@ exports.alertsCity = async (request, response) => {
                     responseData[key].dates[existingDateIndex].hours.push(hour);
                 }
             }
-        });
+        }
 
-        // Obtendo os dados de localização (rua e bairro) para cada localização
-        const locations = await Promise.all(Object.values(responseData).map(async (item) => {
-            const { latitude, longitude } = item.location;
-            console.log(latitude, longitude)
-            const rua = await byLocalization(latitude, longitude);
-            return {
-                ...item,
-                location: {
-                    ...item.location,
-                    Rua,
-                    Bairro
-                }
-            };
-        }));
+        const locations = Object.values(responseData);
 
         const resume = {
             amountAlertByCity: amountAlertByCity,

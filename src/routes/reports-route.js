@@ -12,8 +12,6 @@ router.get('/users', controller.usersAll);
 router.get('/users/:city', controller.usersAllByCity);
 router.get('/complaints', controller.complaints);
 router.get('/complaints/city/:city', controller.complaintsCity);
-router.get('/complaints/:type/city/:city', controller.complaintsTypeAndCity);
-router.get('/complaints/localization', controller.complaintsLocalization);
 router.get('/complaints/period', controller.complaintsPeriod);
 router.get('/alerts', controller.alerts);
 router.get('/alerts/period', controller.alertsPeriod);
