@@ -17,6 +17,7 @@ exports.getById = async (id) => {
     const res = await User.findById(id, '_id nickname city protection_code ');
     return res;
 }
+
 exports.getByNickname = async (nickname) => {
     const res = await User.findOne({
         nickname: nickname
@@ -24,6 +25,7 @@ exports.getByNickname = async (nickname) => {
     return res;
 
 }
+
 /*exports.getByAleatoryQuestions = async(aleatory_question) => {
     const res = await User.find({
         : aleatory_question
@@ -62,6 +64,7 @@ exports.update = async (id, data) => {
     return true;
 
 }
+
 exports.delete = async (id) => {
     await User.findByIdAndRemove(id);
 }

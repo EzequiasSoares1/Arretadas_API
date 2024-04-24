@@ -83,6 +83,55 @@
             }
         }
     },
+    "/reports/users/city": {
+        "get": {
+            "tags": [
+                "Reports"
+            ],
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "operationId": "ObterTodosUsuariosPorCidade",
+            "summary": "Obter todos os usuários por cidade",
+            "parameters": [
+                {
+                    "name": "city",
+                    "in": "query",
+                    "description": "Nome da cidade para filtrar os usuários",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação bem-sucedida",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amountUsers": {
+                                        "type": "integer",
+                                        "description": "Número total de usuários"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Token inválido"
+                },
+                "500": {
+                    "description": "Internal Server Error"
+                }
+            }
+        }
+    },
     "/reports/complaints": {
         "get": {
             "tags": [
@@ -135,7 +184,7 @@
             }
         }
     },
-    "/reports/complaints/city/{city}": {
+    "/reports/complaints/city": {
         "get": {
             "tags": [
                 "Reports"
@@ -149,7 +198,7 @@
             "parameters": [
                 {
                     "name": "city",
-                    "in": "path",
+                    "in": "query",
                     "description": "Nome da cidade para a qual deseja-se obter o resumo das denúncias",
                     "required": true,
                     "schema": {
@@ -207,161 +256,6 @@
             }
         }
     },
-    "/reports/complaints/{type}/city/{city}": {
-        "get": {
-            "tags": [
-                "Reports"
-            ],
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "summary": "Obter denúncias por tipo e cidade",
-            "operationId": "GetComplaintsByTypeAndCity",
-            "parameters": [
-                {
-                    "name": "type",
-                    "in": "path",
-                    "description": "Tipo da denúncia",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    }
-                },
-                {
-                    "name": "city",
-                    "in": "path",
-                    "description": "Nome da cidade",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "Operação bem-sucedida",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "locationsAndTimes": {
-                                        "type": "array",
-                                        "description": "Localizações e horários das ocorrências",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "location": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    },
-                                                    "description": "Coordenadas geográficas da localização da ocorrência"
-                                                },
-                                                "times": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    },
-                                                    "description": "Horários das ocorrências"
-                                                },
-                                                "occurrences": {
-                                                    "type": "integer",
-                                                    "description": "Número de ocorrências"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "500": {
-                    "description": "Erro interno do servidor"
-                }
-            }
-        }
-    },
-    "/reports/complaints/localization": {
-        "get": {
-            "tags": [
-                "Reports"
-            ],
-            "security": [
-                {
-                    "bearerAuth": []
-                }
-            ],
-            "summary": "Obter denúncias por localização",
-            "operationId": "getComplaintsLocalization",
-            "parameters": [
-                {
-                    "name": "latitude",
-                    "in": "query",
-                    "description": "Latitude da localização das denúncias",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    }
-                },
-                {
-                    "name": "longitude",
-                    "in": "query",
-                    "description": "Longitude da localização das denúncias",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "Operação bem-sucedida",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "totalComplaints": {
-                                        "type": "integer",
-                                        "description": "Total de denúncias registradas na localização"
-                                    },
-                                    "complaintsByType": {
-                                        "type": "object",
-                                        "description": "Quantidade de denúncias por tipo",
-                                        "additionalProperties": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "uniqueDates": {
-                                        "type": "array",
-                                        "description": "Datas únicas das denúncias",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "date-time"
-                                        }
-                                    },
-                                    "intervals": {
-                                        "type": "object",
-                                        "description": "Quantidade de denúncias agrupadas por intervalo de hora",
-                                        "additionalProperties": {
-                                            "type": "integer"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "500": {
-                    "description": "Erro interno do servidor"
-                }
-            }
-        }
-    },
     "/reports/complaints/period": {
         "get": {
             "tags": [
@@ -382,17 +276,17 @@
                     "required": true,
                     "schema": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "YYYY-MM-DD"
                     }
                 },
                 {
                     "name": "endDate",
                     "in": "query",
-                    "description": "Data de término do período",
                     "required": true,
+                    "description": "Data de término do período",
                     "schema": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "YYYY-MM-DD"
                     }
                 },
                 {
@@ -560,20 +454,20 @@
                     "name": "startDate",
                     "in": "query",
                     "required": true,
-                    "description": "Data de início do período (AAAA-MM-DD)",
+                    "description": "Data de início do período (DD-MM-AAAA)",
                     "schema": {
                         "type": "string",
-                        "format": "date"
+                        "format": "YYYY-MM-DD"
                     }
                 },
                 {
                     "name": "endDate",
                     "in": "query",
                     "required": true,
-                    "description": "Data de término do período (AAAA-MM-DD)",
+                    "description": "Data de término do período (DD-MM-AAAA)",
                     "schema": {
                         "type": "string",
-                        "format": "date"
+                        "format": "YYYY-MM-DD"
                     }
                 }
             ],
@@ -627,7 +521,7 @@
             }
         }
     },
-    "/reports/alerts/city/{city}": {
+    "/reports/alerts/city": {
         "get": {
             "tags": [
                 "Reports"

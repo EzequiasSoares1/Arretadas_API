@@ -54,13 +54,11 @@ exports.documentationService = (app) => {
     doc['paths']['/complaint/{id}'] = complaint['/complaint/{id}']
     doc['paths']['/complaint/user/{id}'] = complaint['/complaint/user/{id}']
 
-
     //alert
     doc['paths']['/alert'] = alert['/alert']
     doc['paths']['/alert/{id}'] = alert['/alert/{id}']
     doc['paths']['/alert/id/{id}'] = alert['/alert/id/{id}']
     doc['paths']['/alert/user/{id}'] = alert['/alert/user/{id}']
-
 
     //protectiveMeasure
     doc['paths']['/protective-measure'] = protectiveMeasure['/protective-measure']
@@ -72,7 +70,7 @@ exports.documentationService = (app) => {
 
     //users
     doc['paths']['/reports/users'] = report['/reports/users'];
-    doc['paths']['/reports/users/{city}'] = report['/reports/users/{city}'];
+    doc['paths']['/reports/users/city'] = report['/reports/users/city'];
 
     //usefulcontacts
     doc['paths']['/reports/usefulcontacts'] = report['/reports/usefulcontacts'];
@@ -82,13 +80,13 @@ exports.documentationService = (app) => {
 
     //complaints
     doc['paths']['/reports/complaints'] = report['/reports/complaints'];
-    doc['paths']['/reports/complaints/city/{city}'] = report['/reports/complaints/city/{city}'];
+    doc['paths']['/reports/complaints/city'] = report['/reports/complaints/city'];
     doc['paths']['/reports/complaints/period'] = report['/reports/complaints/period'];
 
     //alerts
     doc['paths']['/reports/alerts'] = report['/reports/alerts'];
     doc['paths']['/reports/alerts/period'] = report['/reports/alerts/period'];
-    doc['paths']['/reports/alerts/city/{city}'] = report['/reports/alerts/city/{city}'];
+    doc['paths']['/reports/alerts/city'] = report['/reports/alerts/city'];
 
     app.use('/documentation', swagger.serve, swagger.setup(doc))
 }

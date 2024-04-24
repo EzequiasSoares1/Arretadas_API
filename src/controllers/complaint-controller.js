@@ -1,10 +1,8 @@
 const ValidaContract = require('../validators/fluent-validator');
 const repository = require('../repositories/complaint-repository');
 const guid = require('guid');
-const moment = require('moment')
 const log = require('../services/log-service')
 const axios = require('axios');
-const treatComplaint = require('../services/treatment-service')
 require('dotenv').config()
 
 

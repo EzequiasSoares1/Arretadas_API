@@ -41,7 +41,7 @@ exports.getByUser = async (id) => {
 
 exports.getByDate = async (dates, city) => {
     const res = await Complaint.find({
-        date: { $gte: dates.init, $lte: dates.final },
+        date: { $gte: dates.startDate, $lte: dates.endDate},
         city: new RegExp(city, 'i')
     })
     

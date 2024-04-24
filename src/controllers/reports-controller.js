@@ -1,12 +1,12 @@
 'use strict';
-
+const moment = require('moment');
 const users = require('../repositories/user-repository');
 const usersAdm = require('../repositories/userAdm-repository');
 const alerts = require('../repositories/alert-repository');
 const complaints = require('../repositories/complaint-repository');
 const log = require('../services/log-service');
 const byLocalization = require('../services/geocoding-service')
-
+const treatment = require('../services/treatment-service');
 
 exports.usersAdm = async (request, response) => {
     try {
@@ -43,7 +43,7 @@ exports.usersAll = async (request, response) => {
 
 exports.usersAllByCity = async (request, response) => {
     try {
-        const allUsers = await users.getByCity(request.params.city);
+        const allUsers = await users.getByCity(request.query.city);
         const amountUsers = allUsers.length;
 
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
@@ -93,90 +93,38 @@ exports.complaints = async (request, response) => {
         log("", "Error", "complaint-controller/Complaints", "Buscar resumo das denúncias: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
-}
+};
 
 exports.complaintsCity = async (request, response) => {
     try {
-        const city = request.params.city;
+        const city = request.query.city;
         const complaintsByCity = await complaints.getByCity(city);
-
-        const amountByType = {};
-        complaintsByCity.forEach(complaint => {
-            complaint.type_complaint.forEach(type => {
-                if (amountByType[type]) {
-                    amountByType[type]++;
-                } else {
-                    amountByType[type] = 1;
-                }
-            });
-        });
-
-        const amountComplaintsByCity = complaintsByCity.length;
-
-        const locationsAndTimesMap = {};
-        complaintsByCity.forEach(complaint => {
-            const locationKey = `${complaint.latitude},${complaint.longitude}`;
-            if (!locationsAndTimesMap[locationKey]) {
-                locationsAndTimesMap[locationKey] = { times: [complaint.hour], dates: [complaint.date], occurrences: 1 };
-            } else {
-                locationsAndTimesMap[locationKey].times.push(complaint.hour);
-                locationsAndTimesMap[locationKey].dates.push(complaint.date);
-                locationsAndTimesMap[locationKey].occurrences++;
-            }
-        });
-
-        const locationsAndTimes = await Promise.all(Object.entries(locationsAndTimesMap).map(async ([location, data]) => {
-            const [latitude, longitude] = location.split(',');
-            const address = await byLocalization(latitude, longitude);
-            return {
-                Rua: address === undefined ? "Não Localizado" : address.Rua,
-                Bairro: address === undefined ? "Não Localizado" : address.Bairro,
-                location: location.split(','),
-                hours: Array.from(new Set(data.times)),
-                dates: Array.from(new Set(data.dates)),
-                occurrences: data.occurrences
-            };
-        }));
-
-        const summary = {
-            amountComplaintsByCity,
-            complaintsByType: amountByType,
-            locationsAndTimes
-        };
-
+        const summary = await treatment.summaryComplaint(complaintsByCity);
+      
         log("", "Success", "complaint-controller/complaintsCity", "Buscar resumo por cidade");
         return response.status(200).send(summary);
     } catch (e) {
         log("", "Error", "complaint-controller/ComplaintsCity", "Buscar resumo por cidade: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
     }
-}
+};
 
 exports.complaintsPeriod = async (request, response) => {
 
     try {
-        const { init, final, city } = request.query
-        const typeComplaint = request.query.type;
-        const initValid = moment(init).isValid()
-        const finalValid = moment(final).isValid()
-        const validCitys = ['garanhuns', 'monteiro', 'cidade n/d']
+        const { startDate, endDate, city } = request.query
 
-        if (!initValid || !finalValid || !city || !validCitys.some(validCity => validCity === city.toLowerCase())) {
-            log("", "Warning", "complaint-controller/getByDate", `. Data Inicial: ${init} / Data final: ${final}`);
-            return response.status(400).send({ message: "data ou cidade inválida" })
-        }
-
-        const data = await repository.getByDate({ init, final }, city.toLowerCase())
-        const result = await treatComplaint.treatment({ data, init, final, typeComplaint });
+        const period = await complaints.getByDate({ startDate, endDate }, city);
+        const summary = await treatment.summaryComplaint(period);
 
         log("", "Sucess", "complaint-controller/complaintsPeriod", "Buscar por data");
-        return response.status(200).send(result)
+        return response.status(200).send(summary)
 
     } catch (e) {
         log("", "Error", "complaint-controller/complaintsPeriod", "Buscar por data: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição.' });
     }
-}
+};
 
 exports.alerts = async (request, response) => {
     try {
@@ -236,46 +184,13 @@ exports.alerts = async (request, response) => {
 
 exports.alertsPeriod = async (request, response) => {
     try {
-        const { city, startDate, endDate } = request.query;
-
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-
-        const data = await alerts.getByPeriod(city, start, end);
-
-        if (!data || data.length === 0) {
-            return response.status(404).send({ message: 'Nenhum dado encontrado' });
-        }
-
-        let totalAlerts = 0;
-        const locations = {};
-
-        data.forEach(alert => {
-            totalAlerts++;
-
-            const { latitude, longitude, hour } = alert;
-            const key = `${latitude},${longitude}`;
-
-            if (!locations[key]) {
-                locations[key] = {
-                    latitude: latitude,
-                    longitude: longitude,
-                    intervals: [hour]
-                };
-            } else {
-                if (!locations[key].intervals.includes(hour)) {
-                    locations[key].intervals.push(hour);
-                }
-            }
-        });
-
-        const responseData = {
-            totalAlerts: totalAlerts,
-            locations: Object.values(locations)
-        };
-
+        const { startDate, endDate, city } = request.query
+        
+        const data = await alerts.getByDatePeriod({startDate, endDate}, city);
+        const summary = await treatment.summaryAlerts(data);
+        
         log("", "Success", "alerts-controller/alertsPeriod", "Dados de alerta por período e cidade recuperados com sucesso");
-        return response.status(200).send(responseData);
+        return response.status(200).send(summary);
     } catch (e) {
         log("", "Error", "alerts-controller/alertsPeriod", "Erro ao processar dados de alerta por período e cidade: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
@@ -286,48 +201,10 @@ exports.alertsCity = async (request, response) => {
     try {
         const { city } = request.query;
         const data = await alerts.getByCity(city);
-
-        const amountAlertByCity = data.length;
-        console.log(data)
-
-        const responseData = {};
-
-        for (const alert of data) {
-            const { latitude, longitude, date, hour, user } = alert;
-            const address = await byLocalization(latitude, longitude);
-            const victim = await users.getById(user);
-            const key = `${latitude},${longitude}`;
-
-            if (!responseData[key]) {
-                responseData[key] = {
-                    medidaProtetiva: victim.protection_code === undefined || null ? "Sem Medida Protetiva" : victim.protection_code,
-                    location: {
-                        latitude: latitude,
-                        longitude: longitude,
-                        Rua: address === undefined ? "Não Localizado" : address.Rua,
-                        Bairro: address === undefined ? "Não Localizado" : address.Bairro
-                    },
-                    dates: [{ date: date, hours: [hour] }]
-                };
-            } else {
-                const existingDateIndex = responseData[key].dates.findIndex(item => item.date === date);
-                if (existingDateIndex === -1) {
-                    responseData[key].dates.push({ date: date, hours: [hour] });
-                } else {
-                    responseData[key].dates[existingDateIndex].hours.push(hour);
-                }
-            }
-        }
-
-        const locations = Object.values(responseData);
-
-        const resume = {
-            amountAlertByCity: amountAlertByCity,
-            information: locations
-        };
+        const summary = await treatment.summaryAlerts(data);
 
         log("", "Success", "alerts-controller/alertsCity", "Dados de alerta por cidade recuperados com sucesso");
-        return response.status(200).send(resume);
+        return response.status(200).send(summary);
     } catch (e) {
         log("", "Error", "alerts-controller/alertsCity", "Erro ao processar dados de alerta por cidade: " + e);
         return response.status(500).send({ message: 'Falha ao processar sua requisição' });
