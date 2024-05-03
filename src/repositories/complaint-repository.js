@@ -69,19 +69,3 @@ exports.update = async (data) => {
 
     return await Complaint.findByIdAndUpdate({ _id: data.id }, userRequest);
 }
-
-exports.getByDateAndCity = async (initialDate, finalDate, city) => {
-    try {
-        const complaints = await Complaint.find({
-            date: {
-                $gte: new Date(initialDate),
-                $lte: new Date(finalDate)
-            },
-            city: city
-        });
-
-        return complaints;
-    } catch (error) {
-        throw new Error(`Erro ao buscar denúncias por data e cidade: ${error.message}`);
-    }
-};

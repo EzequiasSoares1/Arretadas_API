@@ -5,7 +5,6 @@ const usersAdm = require('../repositories/userAdm-repository');
 const alerts = require('../repositories/alert-repository');
 const complaints = require('../repositories/complaint-repository');
 const log = require('../services/log-service');
-const byLocalization = require('../services/geocoding-service')
 const treatment = require('../services/treatment-service');
 
 exports.usersAdm = async (request, response) => {
@@ -34,6 +33,7 @@ exports.usersAll = async (request, response) => {
             return acc;
         }, {});
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
+
         return response.json({ amountUsers, usersByCity });
     } catch (error) {
         console.error('Error:', error);
@@ -47,6 +47,20 @@ exports.usersAllByCity = async (request, response) => {
         const amountUsers = allUsers.length;
 
         log("", "Sucess", "complaint-controller/usersAll", "Buscar resumo de usuarios");
+        return response.json({ amountUsers });
+    } catch (error) {
+        console.error('Error:', error);
+        return response.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.usersByPeriod = async (request, response) => {
+    try {
+        const { startDate, endDate, city } = request.query;
+        const allUsers = await users.getByDate({ startDate, endDate }, city);
+        const amountUsers = allUsers.length;
+
+        log("", "Sucess", "complaint-controller/usersByPeriod", "Buscar resumo de usuarios por periodo");
         return response.json({ amountUsers });
     } catch (error) {
         console.error('Error:', error);
@@ -100,7 +114,7 @@ exports.complaintsCity = async (request, response) => {
         const city = request.query.city;
         const complaintsByCity = await complaints.getByCity(city);
         const summary = await treatment.summaryComplaint(complaintsByCity);
-      
+
         log("", "Success", "complaint-controller/complaintsCity", "Buscar resumo por cidade");
         return response.status(200).send(summary);
     } catch (e) {
@@ -185,10 +199,10 @@ exports.alerts = async (request, response) => {
 exports.alertsPeriod = async (request, response) => {
     try {
         const { startDate, endDate, city } = request.query
-        
-        const data = await alerts.getByDatePeriod({startDate, endDate}, city);
+
+        const data = await alerts.getByDatePeriod({ startDate, endDate }, city);
         const summary = await treatment.summaryAlerts(data);
-        
+
         log("", "Success", "alerts-controller/alertsPeriod", "Dados de alerta por período e cidade recuperados com sucesso");
         return response.status(200).send(summary);
     } catch (e) {

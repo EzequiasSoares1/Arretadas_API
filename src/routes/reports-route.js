@@ -10,6 +10,7 @@ router.use(authService.isAdmin);
 router.get('/usersAdm', controller.usersAdm);
 router.get('/users', controller.usersAll);
 router.get('/users/city', controller.usersAllByCity);
+router.get('/users/period', controller.usersByPeriod);
 router.get('/complaints', controller.complaints);
 router.get('/complaints/city', controller.complaintsCity);
 router.get('/complaints/period', controller.complaintsPeriod);

@@ -6,11 +6,20 @@ const User = mongoose.model('User');
 exports.get = async () => {
     const res = await User.find(
         {}, '_id nickname city protection_code ');
+    console.log(res) 
     return res;
 }
 
 exports.getByCity = async (city) => {
     return await User.find({ city: { $regex: new RegExp(city, 'i') } }, '_id nickname city protection_code ');
+}
+
+exports.getByDate = async (dates, city) => {
+    const res = await User.find({
+        date: { $gte: dates.startDate, $lte: dates.endDate},
+        city: new RegExp(city, 'i')
+    })
+    return res;
 }
 
 exports.getById = async (id) => {
@@ -113,5 +122,22 @@ exports.isAleatoryQuestionsResponded = async (id) => {
         return user.isAleatoryQuestionsResponded === null ? false : user.isAleatoryQuestionsResponded;
     } catch (error) {
         return false
+    }
+}
+
+exports.updateUsersWithoutCity = async () => {
+    try {
+        const usersWithoutCity = await User.find({ city: { $exists: false } });
+        
+        for (const user of usersWithoutCity) {
+            user.city = 'cidade n/d';
+            await user.save();
+        }
+        
+        console.log('Usuários sem cidade atualizados com sucesso.');
+        return true;
+    } catch (error) {
+        console.error('Erro ao atualizar usuários sem cidade:', error);
+        return false;
     }
 }

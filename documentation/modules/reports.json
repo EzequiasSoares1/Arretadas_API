@@ -82,6 +82,74 @@
                 }
             }
         }
+    },"/reports/users/period": {
+        "get": {
+            "tags": [
+                "Reports"
+            ],
+            "security": [
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "operationId": "ObterUsuariosPorPeriodo",
+            "summary": "Obter todos os usuários por período",
+            "parameters": [
+                {
+                    "name": "startDate",
+                    "in": "query",
+                    "description": "Data de início do período (formato: YYYY-MM-DD)",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD"
+                    }
+                },
+                {
+                    "name": "endDate",
+                    "in": "query",
+                    "description": "Data de término do período (formato: YYYY-MM-DD)",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD"
+                    }
+                },
+                {
+                    "name": "city",
+                    "in": "query",
+                    "description": "Nome da cidade para filtrar os usuários",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Operação bem-sucedida",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amountUsers": {
+                                        "type": "integer",
+                                        "description": "Número total de usuários"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Token inválido"
+                },
+                "500": {
+                    "description": "Internal Server Error"
+                }
+            }
+        }
     },
     "/reports/users/city": {
         "get": {
